@@ -19,8 +19,6 @@
   //   }
 
   async function HandleClick(e) {
-    console.log("in HandleClick");
-    console.log(e);
     let url = `${config.server}/doButton?bguid=${e.target.getAttribute(
       "bguid"
     )}`;

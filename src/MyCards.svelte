@@ -1,6 +1,6 @@
 <script>
   import { setMyCardsCallback } from "./GameData";
-  import { getCard } from "./Cards";
+  import { getCard, cardHeight, cardWidth } from "./Cards";
 
   let myCards = { cards: ["C14", "D13"] };
 
@@ -8,6 +8,30 @@
   setMyCardsCallback(value => {
     myCards = value;
   });
+
+  $: {
+    var container1 = document.querySelector(".container1"),
+      container2 = document.querySelector(".container2"),
+      img = container2.querySelectorAll(".container2 img"),
+      width = 50,
+      stop = false;
+    expand();
+  }
+
+  function expand() {
+    for (var i = 0; i < img.length; i++) {
+      img[i].style.width = width + "px";
+    }
+    if (stop) return;
+    if (container2.clientHeight < container1.clientHeight) {
+      width++;
+      expand();
+    } else {
+      width--;
+      stop = true;
+      expand();
+    }
+  }
 </script>
 
 <style>
@@ -19,44 +43,6 @@
     display: flex;
     flex-direction: column;
   }
-
-  .cards {
-    flex-wrap: wrap;
-    display: flex;
-    flex-direction: row;
-    height: 100px;
-    margin: 3px;
-  }
-
-  .cardwrap {
-    /* flex: 1 1 15%; */
-    width: auto; /*or whatever you choose*/
-    min-height: 0;
-    min-width: 0;
-    /* border-style: solid;
-    border-radius: 3px;
-    border-color: black;
-    border-width: 2px; */
-    margin: 2px;
-    padding: 2px;
-    row-gap: 2px;
-    /* margin: auto; */
-  }
-
-  .cardwrap img {
-    padding: 5px;
-    border-style: solid;
-    border-radius: 3px;
-    border-color: black;
-    border-width: 2;
-    /* display: block; */
-    /* width: 20%; */
-    min-height: 0;
-    min-width: 0;
-    max-width: 100px; /*actual image width*/
-    height: auto; /* maintain aspect ratio*/
-    margin: auto; /*optional centering of image*/
-  }
 </style>
 
 <div class="gridMyCards">
@@ -64,9 +50,7 @@
   <div class="cards">
 
     {#each myCards.cards as el}
-      <div class="cardwrap">
-        <img alt={el} width="100" src={getCard(el)} />
-      </div>
+      <img alt={el} height={cardHeight} width={cardWidth} src={getCard(el)} />
     {/each}
   </div>
 </div>

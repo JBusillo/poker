@@ -1,6 +1,6 @@
 <script>
   import { setTableCardsCallback } from "./GameData";
-  import { getCard } from "./Cards";
+  import { getCard, cardHeight, cardWidth } from "./Cards";
   let tableCards = {
     cards: ["H14", "D14", "S13", "C02"]
   };
@@ -25,20 +25,6 @@
     display: flex;
     flex-direction: column;
   }
-
-  .cards {
-    flex-wrap: wrap;
-    display: flex;
-    flex-direction: row;
-    height: auto;
-    width: auto;
-    margin: 3px;
-  }
-
-  .cards img {
-    /* height: 200px; */
-    min-width: 0;
-  }
 </style>
 
 <div class="gridTableCards">
@@ -47,7 +33,7 @@
 
     {#each tableCards.cards as el}
       <!-- <div class="cardwrap"> -->
-      <img alt={el} height="110" width="72" src={getCard(el)} />
+      <img alt={el} height={cardHeight} width={cardWidth} src={getCard(el)} />
       <!-- <img alt={el} src={getCard(el)} /> -->
       <!-- </div> -->
     {/each}
