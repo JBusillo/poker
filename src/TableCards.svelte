@@ -1,6 +1,6 @@
 <script>
   import { setTableCardsCallback } from "./GameData";
-  import { Cards } from "./cards";
+  import { getCard } from "./Cards";
   let tableCards = {
     cards: ["H14", "D14", "S13", "C02"]
   };
@@ -30,38 +30,14 @@
     flex-wrap: wrap;
     display: flex;
     flex-direction: row;
-    height: 100px;
+    height: auto;
+    width: auto;
     margin: 3px;
   }
 
-  .cardwrap {
-    /* flex: 1 1 15%; */
-    width: auto; /*or whatever you choose*/
-    min-height: 0;
+  .cards img {
+    /* height: 200px; */
     min-width: 0;
-    /* border-style: solid;
-    border-radius: 3px;
-    border-color: black;
-    border-width: 2px; */
-    margin: 2px;
-    padding: 2px;
-    row-gap: 2px;
-    /* margin: auto; */
-  }
-
-  .cardwrap img {
-    padding: 5px;
-    border-style: solid;
-    border-radius: 3px;
-    border-color: black;
-    border-width: 2;
-    /* display: block; */
-    /* width: 20%; */
-    min-height: 0;
-    min-width: 0;
-    max-width: 100px; /*actual image width*/
-    height: auto; /* maintain aspect ratio*/
-    margin: auto; /*optional centering of image*/
   }
 </style>
 
@@ -70,9 +46,10 @@
   <div class="cards">
 
     {#each tableCards.cards as el}
-      <div class="cardwrap">
-        <img alt="alt" width="100" src={Cards.get(el)} />
-      </div>
+      <!-- <div class="cardwrap"> -->
+      <img alt={el} height="110" width="72" src={getCard(el)} />
+      <!-- <img alt={el} src={getCard(el)} /> -->
+      <!-- </div> -->
     {/each}
   </div>
 

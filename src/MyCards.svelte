@@ -1,6 +1,6 @@
 <script>
   import { setMyCardsCallback } from "./GameData";
-  import { Cards } from "./Cards";
+  import { getCard } from "./Cards";
 
   let myCards = { cards: ["C14", "D13"] };
 
@@ -65,7 +65,7 @@
 
     {#each myCards.cards as el}
       <div class="cardwrap">
-        <img alt="alt" width="100" src={Cards.get(el)} />
+        <img alt={el} width="100" src={getCard(el)} />
       </div>
     {/each}
   </div>
