@@ -1,18 +1,17 @@
 <script>
-  import { setGameStatusCallback } from "./GameData";
   import { beforeUpdate, afterUpdate } from "svelte";
+  import { setGameStatusCb } from "./Communication";
+  let gameStatus;
+  setGameStatusCb(value => {
+    gameStatus = value;
+  });
+
   let autoscroll;
   let sdiv;
 
-  let gameStatus = null;
   let terminal = "";
   let buttons = [];
   let status = "Waiting for Players";
-
-  //once
-  setGameStatusCallback(value => {
-    gameStatus = value;
-  });
 
   // before each render
   beforeUpdate(() => {

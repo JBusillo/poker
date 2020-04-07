@@ -1,7 +1,35 @@
 import { config } from './config';
 import io from 'socket.io-client';
-import * as Data from './GameData';
 let socket = null;
+
+let setPlayerStatus = null;
+export function setPlayerStatusCb(value) {
+	setPlayerStatus = value;
+}
+let setGameStatus = null;
+export function setGameStatusCb(value) {
+	setGameStatus = value;
+}
+
+let setTableCards = null;
+export function setTableCardsCb(value) {
+	setTableCards = value;
+}
+
+let setMyCards = null;
+export function setMyCardsCb(value) {
+	setMyCards = value;
+}
+
+let setMyStatus = null;
+export function setMyStatusCb(value) {
+	setMyStatus = value;
+}
+
+let setMyActions = null;
+export function setMyActionsCb(value) {
+	setMyActions = value;
+}
 
 export function initBroadcastComm() {
 	console.log('initBroadcastComm');
@@ -10,13 +38,13 @@ export function initBroadcastComm() {
 		try {
 			switch (type) {
 				case 'PlayerStatus':
-					Data.setPlayerStatus(data);
+					setPlayerStatus(data);
 					break;
 				case 'GameStatus':
-					Data.setGameStatus(data);
+					setGameStatus(data);
 					break;
 				case 'TableCards':
-					Data.setTableCards(data);
+					setTableCards(data);
 					break;
 				default:
 					throw `Invalid Type for PokerMessage!! ${type}`;
@@ -34,13 +62,13 @@ export function initUserComm(guid) {
 		try {
 			switch (type) {
 				case 'MyActions':
-					Data.setMyActions(data);
+					setMyActions(data);
 					break;
 				case 'MyCards':
-					Data.setMyCards(data);
+					setMyCards(data);
 					break;
 				case 'MyStatus':
-					Data.setMyStatus(data);
+					setMyStatus(data);
 					break;
 				default:
 					throw `Invalid Type for GuidMessage!! ${type}`;

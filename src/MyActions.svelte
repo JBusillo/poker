@@ -1,10 +1,10 @@
 <script>
   import { config } from "./config";
-  import { setMyActionsCallback } from "./GameData";
+  import { setMyActionsCb } from "./Communication";
   let myActions = { buttons: [] };
 
   //once
-  setMyActionsCallback(value => {
+  setMyActionsCb(value => {
     myActions = value;
   });
 

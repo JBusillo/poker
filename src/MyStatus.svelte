@@ -1,9 +1,8 @@
 <script>
-  import { setMyStatusCallback } from "./GameData";
+  import { setMyStatusCb } from "./Communication";
   let myStatus = null;
 
-  //once
-  setMyStatusCallback(value => {
+  setMyStatusCb(value => {
     myStatus = value;
   });
 

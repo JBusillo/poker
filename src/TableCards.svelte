@@ -1,12 +1,12 @@
 <script>
-  import { setTableCardsCallback } from "./GameData";
+  import { setTableCardsCb } from "./Communication";
   import { getCard, cardHeight, cardWidth } from "./Cards";
   let tableCards = {
     cards: ["H14", "D14", "S13", "C02"]
   };
 
   //once
-  setTableCardsCallback(value => {
+  setTableCardsCb(value => {
     tableCards = value;
   });
 

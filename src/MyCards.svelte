@@ -1,15 +1,14 @@
 <script>
-  import { setMyCardsCallback } from "./GameData";
+  import { setMyCardsCb } from "./Communication";
   import { getCard, cardHeight, cardWidth } from "./Cards";
   import { afterUpdate, beforeUpdate } from "svelte";
 
   let myCards = { cards: ["C14", "D13"] };
 
   //once
-  setMyCardsCallback(value => {
+  setMyCardsCb(value => {
     myCards = value;
     x++;
-    console.log(myCards.cards);
   });
 
   let wrap_id = "my_cards";
