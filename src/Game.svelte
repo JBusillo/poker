@@ -12,6 +12,7 @@
   Communication.initBroadcastComm();
   let uuid = window.sessionStorage.getItem("uuid");
   Communication.initUserComm(uuid);
+  
   let url = `${config.server}/playerReady?uuid=${uuid}`;
   fetch(url)
     .then(res => res.json())
