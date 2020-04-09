@@ -1,9 +1,13 @@
 <script>
-  import { setMyStatusCb } from "./Communication";
+  import { setMyStatusCb } from "./support/Communication";
+  import { onMount } from "svelte";
+
   let myStatus = null;
 
-  setMyStatusCb(value => {
-    myStatus = value;
+  onMount(() => {
+    setMyStatusCb(value => {
+      myStatus = value;
+    });
   });
 
   if (myStatus) {

@@ -1,11 +1,13 @@
 <script>
-  import { config } from "./config";
-  import { setMyActionsCb } from "./Communication";
+  import { onMount } from "svelte";
+  import { config } from "./support/config";
+  import { setMyActionsCb } from "./support/Communication";
   let myActions = { buttons: [] };
 
-  //once
-  setMyActionsCb(value => {
-    myActions = value;
+  onMount(() => {
+    setMyActionsCb(value => {
+      myActions = value;
+    });
   });
 
   //   $: {

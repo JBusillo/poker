@@ -1,8 +1,13 @@
 <script>
-  import { setPlayerStatusCb } from "./Communication";
+  import { setPlayerStatusCb } from "./support/Communication";
+  import { onMount } from "svelte";
+
   let playerStatus;
-  setPlayerStatusCb(value => {
-    playerStatus = value;
+
+  onMount(() => {
+    setPlayerStatusCb(value => {
+      playerStatus = value;
+    });
   });
 </script>
 

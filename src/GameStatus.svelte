@@ -1,9 +1,13 @@
 <script>
+  import { onMount } from "svelte";
   import { beforeUpdate, afterUpdate } from "svelte";
-  import { setGameStatusCb } from "./Communication";
+  import { setGameStatusCb } from "./support/Communication";
   let gameStatus;
-  setGameStatusCb(value => {
-    gameStatus = value;
+
+  onMount(() => {
+    setGameStatusCb(value => {
+      gameStatus = value;
+    });
   });
 
   let autoscroll;

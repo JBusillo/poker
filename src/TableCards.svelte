@@ -1,13 +1,16 @@
 <script>
-  import { setTableCardsCb } from "./Communication";
-  import { getCard, cardHeight, cardWidth } from "./Cards";
+  import { setTableCardsCb } from "./support/Communication";
+  import { getCard, cardHeight, cardWidth } from "./support/Cards";
+  import { onMount } from "svelte";
+
   let tableCards = {
     cards: ["H14", "D14", "S13", "C02"]
   };
 
-  //once
-  setTableCardsCb(value => {
-    tableCards = value;
+  onMount(() => {
+    setTableCardsCb(value => {
+      tableCards = value;
+    });
   });
 
   if (tableCards) {
@@ -32,10 +35,7 @@
   <div class="cards">
 
     {#each tableCards.cards as el}
-      <!-- <div class="cardwrap"> -->
       <img alt={el} height={cardHeight} width={cardWidth} src={getCard(el)} />
-      <!-- <img alt={el} src={getCard(el)} /> -->
-      <!-- </div> -->
     {/each}
   </div>
 

@@ -1,14 +1,14 @@
 <script>
-  import { setMyCardsCb } from "./Communication";
-  import { getCard, cardHeight, cardWidth } from "./Cards";
-  import { afterUpdate, beforeUpdate } from "svelte";
+  import { setMyCardsCb } from "./support/Communication";
+  import { getCard, cardHeight, cardWidth } from "./support/Cards";
+  import { afterUpdate, beforeUpdate, onMount } from "svelte";
 
   let myCards = { cards: ["C14", "D13"] };
 
-  //once
-  setMyCardsCb(value => {
-    myCards = value;
-    x++;
+  onMount(() => {
+    setMyCardsCb(value => {
+      myCards = value;
+    });
   });
 
   let wrap_id = "my_cards";
