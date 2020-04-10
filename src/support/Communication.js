@@ -1,8 +1,13 @@
 import { config } from './config';
 import io from 'socket.io-client';
-let socket = null;
 
+let socket = null;
 let setPlayerStatus = null;
+
+export function getSocket() {
+	return socket;
+}
+
 export function setPlayerStatusCb(value) {
 	setPlayerStatus = value;
 }
@@ -31,7 +36,7 @@ export function setMyActionsCb(value) {
 	setMyActions = value;
 }
 
-export function initBroadcastComm() {
+export function initCommunication(guid) {
 	console.log('initBroadcastComm');
 	socket = io(`${config.server}`, { transport: ['websocket'] });
 	socket.on('PokerMessage', (type, data) => {
@@ -53,12 +58,9 @@ export function initBroadcastComm() {
 			console.log(e);
 		}
 	});
-}
 
-export function initUserComm(guid) {
 	console.log('Creating Listener for ' + guid);
 	socket.on(guid, (type, data) => {
-		console.log('received message in initUserComm');
 		try {
 			switch (type) {
 				case 'MyActions':

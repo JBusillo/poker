@@ -1,5 +1,5 @@
 <script>
-  import { config } from "./support/config";
+  import { config } from "src/support/config";
   export let cbSignIn;
 
   let name = window.sessionStorage.getItem("name");

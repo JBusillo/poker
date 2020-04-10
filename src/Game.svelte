@@ -6,20 +6,21 @@
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
   import MyActions from "./MyActions.svelte";
-  import * as Communication from "./support/Communication";
-
+  import Dialog from "src/dialogs/Dialog.svelte";
+  import * as Communication from "./support/Communication.js";
   export let size;
+  let isDialog = false;
 
-  Communication.initBroadcastComm();
   let uuid = window.sessionStorage.getItem("uuid");
-  Communication.initUserComm(uuid);
+
+  Communication.initCommunication(uuid);
 
   let url = `${config.server}/playerReady?uuid=${uuid}`;
   fetch(url)
     .then(res => res.json())
     .then(res => {
       if (res.status === "Error") {
-        route("/");
+        console.log("Error in playerReady");
       }
     })
     .catch(err => {
@@ -59,12 +60,16 @@
 </style>
 
 <main>
-  <div class="container">
-    <PlayerStatus {size} />
-    <MyStatus {size} />
-    <GameStatus {size} />
-    <TableCards {size} />
-    <MyCards {size} />
-    <MyActions {size} />
-  </div>
+  {#if isDialog}
+    <Dialog />
+  {:else}
+    <div class="container">
+      <PlayerStatus {size} />
+      <MyStatus {size} />
+      <GameStatus {size} />
+      <TableCards {size} />
+      <MyCards {size} />
+      <MyActions {size} />
+    </div>
+  {/if}
 </main>

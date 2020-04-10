@@ -11,14 +11,14 @@
     cbSignIn = () => {
       signedIn = true;
     };
-    size = CalcSize;
+    CalcSize();
   });
 
   function CalcSize() {
     let maxwidth = Math.max(window.innerWidth, window.innerHeight);
-    if (maxwidth >= 1000) return "L";
-    else if (maxwidth >= 500) return "S";
-    else return "S";
+    if (maxwidth >= 1000) size = "L";
+    else if (maxwidth >= 500) size = "S";
+    else size = "S";
   }
 </script>
 

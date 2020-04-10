@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import { config } from "./support/config";
-  import { setMyActionsCb } from "./support/Communication";
+  import { config } from "src/support/config";
+  import { setMyActionsCb } from "src/support/Communication";
   let myActions = { buttons: [] };
 
   onMount(() => {

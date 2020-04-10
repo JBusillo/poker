@@ -1,5 +1,5 @@
 <script>
-  import { setMyStatusCb } from "./support/Communication";
+  import { setMyStatusCb } from "src/support/Communication";
   import { onMount } from "svelte";
 
   let myStatus = null;

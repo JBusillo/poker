@@ -1,8 +1,14 @@
 <script>
-  import { setTableCardsCb } from "./support/Communication";
-  import { getCard, cardHeight, cardWidth } from "./support/Cards";
-  import { onMount } from "svelte";
+  import { setTableCardsCb } from "src/support/Communication";
+  import {
+    getCard,
+    cardHeight,
+    cardWidth,
+    resizeCards
+  } from "src/support/Cards";
+  import { onMount, beforeUpdate, afterUpdate } from "svelte";
 
+  let x = 1;
   let tableCards = {
     cards: ["H14", "D14", "S13", "C02"]
   };
@@ -10,7 +16,14 @@
   onMount(() => {
     setTableCardsCb(value => {
       tableCards = value;
+      x++;
     });
+  });
+
+  beforeUpdate(() => x++);
+
+  afterUpdate(() => {
+    resizeCards("gridTableCards", "TCHead", tableCards.cards, "TCCards");
   });
 
   if (tableCards) {
@@ -30,13 +43,8 @@
   }
 </style>
 
-<div class="gridTableCards">
-  <h1>Dealt Cards</h1>
-  <div class="cards">
-
-    {#each tableCards.cards as el}
-      <img alt={el} height={cardHeight} width={cardWidth} src={getCard(el)} />
-    {/each}
-  </div>
+<div class="gridTableCards" dummy={x}>
+  <div class="TCHead">Table Cards</div>
+  <div id="TCCards" />
 
 </div>

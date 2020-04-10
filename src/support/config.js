@@ -22,7 +22,6 @@ function getconfig() {
 			throw new Error(`Build Environment unknown: ${env}`);
 	}
 
-	console.log(cfg);
 	return cfg;
 }
 export let config = getconfig();

@@ -1,7 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import { beforeUpdate, afterUpdate } from "svelte";
-  import { setGameStatusCb } from "./support/Communication";
+  import { setGameStatusCb } from "src/support/Communication";
+  export let size;
+
   let gameStatus;
 
   onMount(() => {
@@ -25,7 +27,7 @@
 
   // after each render
   afterUpdate(() => {
-    if (autoscroll) sdiv.scrollTo(0, sdiv.scrollHeight);
+    if (sdiv && autoscroll) sdiv.scrollTo(0, sdiv.scrollHeight);
   });
 
   $: {
@@ -97,19 +99,21 @@
   }
 </style>
 
-<div class="gridGameStatus">
-  <h1>Game Status</h1>
-  <div>
-    <div class="gsStatusBox">{`Current Status: ${status}`}</div>
+{#if size === 'L'}
+  <div class="gridGameStatus">
+    <h1>Game Status</h1>
+    <div>
+      <div class="gsStatusBox">{`Current Status: ${status}`}</div>
+    </div>
+    <div id="wrap">
+      <label class="gs_scroll_label">
+        <textarea bind:this={sdiv}>{terminal}</textarea>
+      </label>
+    </div>
+    <div>
+      {#each buttons as button}
+        <button class="button1" type="button">{button.text}</button>
+      {/each}
+    </div>
   </div>
-  <div id="wrap">
-    <label class="gs_scroll_label">
-      <textarea bind:this={sdiv}>{terminal}</textarea>
-    </label>
-  </div>
-  <div>
-    {#each buttons as button}
-      <button class="button1" type="button">{button.text}</button>
-    {/each}
-  </div>
-</div>
+{/if}
