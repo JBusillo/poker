@@ -1,6 +1,9 @@
 <script>
-  import { config } from "src/support/config";
-  export let cbSignIn;
+  import { config } from "../support/config";
+  import { getSocket, initCommunication } from "../support/Communication";
+  export let endDialog;
+  // export let dialogData;
+  // export let dialogCallback;
 
   let name = window.sessionStorage.getItem("name");
   let uuid = window.sessionStorage.getItem("uuid");
@@ -27,20 +30,19 @@
         "Hey cabrón!  None of those commie names with more than 10 letters!";
       return;
     }
-    let url =
-      `${config.server}/addPlayer?player=${lname}` +
-      (uuid ? `&uuid=${uuid}` : "");
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
+
+    initCommunication();
+
+    getSocket().emit(
+      "ClientMessage",
+      { msgType: "addPlayer", uuid: uuid, player: lname },
+      function(data) {
+        console.log(`Callback/SignIn/AddPlayer data: ${JSON.stringify(data)}`);
         window.sessionStorage.setItem("uuid", data.uuid);
         window.sessionStorage.setItem("name", lname);
-        cbSignIn();
-      })
-      .catch(err => {
-        console.log("There was an error");
-        console.log(err);
-      });
+      }
+    );
+    endDialog();
   }
 </script>
 
@@ -81,7 +83,7 @@
             }} />
           <div class="error">{error}</div>
         </div>
-        <button id="signin" on:click={addPlayer}>Add Player</button>
+        <button on:click={addPlayer}>Add Player</button>
       </div>
     {/if}
   </div>

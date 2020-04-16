@@ -1,6 +1,8 @@
 <script>
-  import { config } from "src/support/config";
-
+  import { getSocket, setDialog } from "../support/Communication";
+  export let endDialog;
+  export let dialogData;
+  export let dialogCallback;
   let selectedGame = null;
   let gameGroup = null;
   let errorMessage = "";
@@ -20,13 +22,35 @@
   let fante = "$0.00";
 
   function addAnte(event) {
-    ante += Number(event.target.getAttribute("amt"));
-    fante = `$${(ante / 100).toFixed(2)}`;
+    let increase = Number(event.target.getAttribute("amt"));
+    if (increase + ante > dialogData.chips) {
+      errorMessage = "You don't have enough money!";
+    } else {
+      ante += increase;
+      fante = `$${(ante / 100).toFixed(2)}`;
+    }
   }
 
   function resetAnte(event) {
     ante = 0;
     fante = "$0.00";
+  }
+
+  function pass(event) {
+    getSocket().emit("ClientMessage", {
+      msgType: "dealerPass",
+      uuid: window.sessionStorage.getItem("uuid")
+    });
+  }
+
+  function buyIn(event) {
+    setDialog({
+      dialog: "BuyIn",
+      return: {
+        data: dialogData,
+        callback: dialogCallback
+      }
+    });
   }
 
   function submit() {
@@ -41,20 +65,11 @@
       return;
     }
 
-    let url =
-      `${config.server}/addPlayer?player=${lname}` +
-      (uuid ? `&uuid=${uuid}` : "");
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        window.sessionStorage.setItem("uuid", data.uuid);
-        window.sessionStorage.setItem("name", lname);
-        cbSignIn();
-      })
-      .catch(err => {
-        console.log("There was an error");
-        console.log(err);
-      });
+    if (dialogCallback) {
+      dialogCallback({ game: gameGroup, ante: ante, accept: true });
+    }
+
+    endDialog();
   }
 </script>
 
@@ -112,6 +127,17 @@
     margin-bottom: 20px;
   }
 
+  .flexCol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .flexRow {
+    display: flex;
+    flex-direction: row;
+  }
+
   .cbtn {
     display: block;
     height: 80px;
@@ -161,7 +187,12 @@
       {/each}
     </div>
     <div class="acontainer">
-      <div class="ante">Ante: {fante}</div>
+      <div class="flexRow">
+        <div class="ante">Ante: {fante}</div>
+        <div class="ante">
+          Chips: {`$${(dialogData.chips / 100).toFixed(2)}`}
+        </div>
+      </div>
       <div>
         <button class="cbtn" amt="10" on:click={addAnte}>10¢</button>
         <button class="cbtn bgreen" amt="25" on:click={addAnte}>25¢</button>
@@ -172,7 +203,11 @@
       </div>
       <button class="resetbtn" on:click={resetAnte}>RESET</button>
     </div>
-    <button class="btn" on:click={submit}>OK</button>
+    <div id="cccc" class="flexCol">
+      <button class="btn" on:click={buyIn}>Buy In</button>
+      <button class="btn" on:click={pass}>Pass</button>
+      <button class="btn" on:click={submit}>OK</button>
+    </div>
   </div>
   <div class="error">{errorMessage}</div>
 </div>

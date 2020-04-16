@@ -1,16 +1,24 @@
 import { config } from './config';
 import io from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
+import log from 'roarr';
 
 let socket = null;
-let setPlayerStatus = null;
 
 export function getSocket() {
 	return socket;
 }
 
+export let setDialog = null;
+export function setDialogCb(value) {
+	setDialog = value;
+}
+
+let setPlayerStatus = null;
 export function setPlayerStatusCb(value) {
 	setPlayerStatus = value;
 }
+
 let setGameStatus = null;
 export function setGameStatusCb(value) {
 	setGameStatus = value;
@@ -36,44 +44,40 @@ export function setMyActionsCb(value) {
 	setMyActions = value;
 }
 
-export function initCommunication(guid) {
-	console.log('initBroadcastComm');
+export function initCommunication() {
+	console.log(`initCommunication`);
 	socket = io(`${config.server}`, { transport: ['websocket'] });
-	socket.on('PokerMessage', (type, data) => {
+	socket.on('PokerMessage', (type, data, fn) => {
 		try {
 			switch (type) {
 				case 'PlayerStatus':
-					setPlayerStatus(data);
+					setPlayerStatus(data, fn);
 					break;
 				case 'GameStatus':
-					setGameStatus(data);
+					log.debug(JSON.stringify(data));
+
+					setGameStatus(data, fn);
 					break;
 				case 'TableCards':
-					setTableCards(data);
+					setTableCards(data, fn);
+					break;
+				case 'Dialog':
+					setDialog(data, fn);
+					break;
+				case 'MyActions':
+					setMyActions(data, fn);
+					break;
+				case 'MyCards':
+					setMyCards(data, fn);
+					break;
+				case 'MyStatus':
+					setMyCards(data, fn);
+					break;
+				case 'Dialog':
+					setDialog(data, fn);
 					break;
 				default:
 					throw `Invalid Type for PokerMessage!! ${type}`;
-			}
-		} catch (e) {
-			console.log(e);
-		}
-	});
-
-	console.log('Creating Listener for ' + guid);
-	socket.on(guid, (type, data) => {
-		try {
-			switch (type) {
-				case 'MyActions':
-					setMyActions(data);
-					break;
-				case 'MyCards':
-					setMyCards(data);
-					break;
-				case 'MyStatus':
-					setMyStatus(data);
-					break;
-				default:
-					throw `Invalid Type for GuidMessage!! ${type}`;
 			}
 		} catch (e) {
 			console.log(e);

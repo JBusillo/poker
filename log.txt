@@ -1,0 +1,26 @@
+
+> poker-svelte@1.0.0 dev D:\Projects\poker-svelte
+> rollup -c -w
+
+[1m[32mLiveReload enabled[39m[22m
+
+> poker-svelte@1.0.0 start D:\Projects\poker-svelte
+> sirv public -p 80 "--dev"
+
+[H[2J
+  [32mYour application is ready~! 🚀
+
+[39m  [1m- Local:[22m      http://localhost:80
+
+[7m LOGS [27m
+
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m5.14ms[39m[22m[90m ─ [39m/global.css?livereload=1586835779793
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m5.90ms[39m[22m[90m ─ [39m/build/bundle.css?livereload=1586835779793
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m6.23ms[39m[22m[90m ─ [39m/
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m0.24ms[39m[22m[90m ─ [39m/global.css
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m0.47ms[39m[22m[90m ─ [39m/build/bundle.css
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m2.02ms[39m[22m[90m ─ [39m/build/bundle.js
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m0.64ms[39m[22m[90m ─ [39m/build/assets/cards.svg
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m0.62ms[39m[22m[90m ─ [39m/build/bundle.css.map
+  [[35m22:43:00[39m] [32m200[39m[90m ─ [39m[37m[1m2.17ms[39m[22m[90m ─ [39m/build/bundle.js.map
+  [[35m22:43:02[39m] [31m404[39m[90m ─ [39m[37m[1m0.40ms[39m[22m[90m ─ [39m/sw-debug.js

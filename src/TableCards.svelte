@@ -1,11 +1,6 @@
 <script>
-  import { setTableCardsCb } from "src/support/Communication";
-  import {
-    getCard,
-    cardHeight,
-    cardWidth,
-    resizeCards
-  } from "src/support/Cards";
+  import { setTableCardsCb } from "./support/Communication";
+  import { getCard, cardHeight, cardWidth, resizeCards } from "./support/Cards";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
 
   let x = 1;

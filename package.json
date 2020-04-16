@@ -2,10 +2,11 @@
 	"name": "poker-svelte",
 	"version": "1.0.0",
 	"scripts": {
-		"build": "rollup -c prod.rollup.config.js",
+		"build": "rollup -c ",
+		"oldbuild": "rollup -c prod.rollup.config.js",
 		"deploy": "@pwsh -NoProfile -ExecutionPolicy Unrestricted -Command deploySvelte",
 		"dev": "rollup -c -w",
-		"start": "sirv public -p 80"
+		"start": "sirv public -p 80 -q"
 	},
 	"devDependencies": {
 		"@rollup/plugin-alias": "^3.0.1",
@@ -21,7 +22,11 @@
 		"svelte": "^3.0.0"
 	},
 	"dependencies": {
+		"@rollup/plugin-json": "^4.0.2",
+		"roarr": "^2.15.3",
+		"rollup-plugin-node-builtins": "^2.1.2",
 		"sirv-cli": "^0.4.4",
-		"socket.io-client": "^2.3.0"
+		"socket.io-client": "^2.3.0",
+		"uuid": "^7.0.3"
 	}
 }

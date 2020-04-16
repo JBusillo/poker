@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { beforeUpdate, afterUpdate } from "svelte";
-  import { setGameStatusCb } from "src/support/Communication";
+  import { setGameStatusCb } from "./support/Communication";
   export let size;
 
   let gameStatus;

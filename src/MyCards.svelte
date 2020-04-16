@@ -1,11 +1,6 @@
 <script>
-  import { setMyCardsCb, getSocket } from "src/support/Communication";
-  import {
-    getCard,
-    cardHeight,
-    cardWidth,
-    resizeCards
-  } from "src/support/Cards";
+  import { setMyCardsCb, getSocket } from "./support/Communication";
+  import { getCard, cardHeight, cardWidth, resizeCards } from "./support/Cards";
   import { afterUpdate, beforeUpdate, onMount } from "svelte";
 
   let myCards = { cards: ["C14", "D13"] };
@@ -22,7 +17,6 @@
 
   afterUpdate(() => {
     resizeCards("gridMyCards", "MCHead", myCards.cards, "MCCards");
-    getSocket().emit("ClientMessage", { msgType: "test" });
   });
 </script>
 

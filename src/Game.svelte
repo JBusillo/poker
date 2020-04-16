@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import { config } from "./support/config";
   import PlayerStatus from "./PlayerStatus.svelte";
   import MyStatus from "./MyStatus.svelte";
@@ -6,30 +7,93 @@
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
   import MyActions from "./MyActions.svelte";
-  import Dialog from "src/dialogs/Dialog.svelte";
-  import * as Communication from "./support/Communication.js";
-  export let size;
-  let isDialog = false;
+  import Dialog from "./dialogs/Dialog.svelte";
+  import {
+    initCommunication,
+    getSocket,
+    setDialogCb,
+    setDialog
+  } from "./support/Communication.js";
+  import log from "roarr";
 
+  let size;
+  let dialogData = null;
+  let dialogCallback = null;
   let uuid = window.sessionStorage.getItem("uuid");
 
-  Communication.initCommunication(uuid);
-
-  let url = `${config.server}/playerReady?uuid=${uuid}`;
-  fetch(url)
-    .then(res => res.json())
-    .then(res => {
-      if (res.status === "Error") {
-        console.log("Error in playerReady");
-      }
-    })
-    .catch(err => {
-      console.log("There was an error");
-      console.log(err);
+  onMount(() => {
+    // Ensure that `globalThis.ROARR` is configured.
+    globalThis.ROARR = globalThis.ROARR || {};
+    globalThis.ROARR.write = message => {
+      console.log(JSON.parse(message));
+    };
+    log.debug(`Game onMount`);
+    // Register Dialog Callback
+    setDialogCb((data, cb) => {
+      log.debug(`In Game/setDialogCb`);
+      dialogData = data;
+      dialogCallback = cb;
     });
+    // set  initial dialog for SignIn
+    setDialog({ dialog: "SignIn" });
+    // Ctrl-C will abort server
+    document.body.addEventListener(
+      "keydown",
+      function(e) {
+        e = e || window.event;
+        var key = e.which || e.keyCode; // keyCode detection
+        var ctrl = e.ctrlKey ? e.ctrlKey : key === 17 ? true : false; // ctrl detection
+
+        if (key == 86 && ctrl) {
+          console.log("Ctrl + V Pressed !");
+        } else if (key == 67 && ctrl) {
+          getSocket().emit("ClientMessage", { msgType: "abort" });
+        }
+      },
+      false
+    );
+
+    CalcSize();
+  });
+
+  // CalcSize -- returns L or S depending on window size  (and eventually M for Medium?)
+  function CalcSize() {
+    let maxwidth = Math.max(window.innerWidth, window.innerHeight);
+    if (maxwidth >= 1000) {
+      // Large desktop size
+      size = "L";
+    } else if (maxwidth >= 500) {
+      // Tablet size
+      size = "S";
+    } else {
+      // Smartphone size
+      size = "S";
+    }
+  }
+
+  // Callback to end a fullscreen dialog
+  let endDialog = data => {
+    console.log("in endDialog");
+    console.log(data);
+    if (data) console.log(data.return);
+    if (data && data.return) {
+      setDialog(data.return.data, data.return.callback);
+      //      dialogData;
+    } else dialogData = null;
+  };
 </script>
 
 <style>
+  main {
+    background-color: wheat;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: black;
+  }
+
   .container {
     display: grid;
     height: 100vh;
@@ -59,17 +123,18 @@
   }
 </style>
 
+<svelte:window on:resize={CalcSize} />
+
 <main>
-  {#if isDialog}
-    <Dialog />
-  {:else}
-    <div class="container">
-      <PlayerStatus {size} />
-      <MyStatus {size} />
-      <GameStatus {size} />
-      <TableCards {size} />
-      <MyCards {size} />
-      <MyActions {size} />
-    </div>
+  {#if dialogData}
+    <Dialog {endDialog} {dialogData} {dialogCallback} />
   {/if}
+  <div class="container">
+    <PlayerStatus {size} />
+    <MyStatus />
+    <GameStatus {size} />
+    <TableCards />
+    <MyCards />
+    <MyActions />
+  </div>
 </main>

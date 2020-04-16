@@ -1,15 +1,37 @@
 <script>
-  import { setPlayerStatusCb } from "src/support/Communication";
+  import {
+    getSocket,
+    setPlayerStatusCb,
+    setDialog
+  } from "./support/Communication";
   import { onMount } from "svelte";
+  import log from "roarr";
+
   export let size;
 
   let playerStatus;
+  let options;
 
   onMount(() => {
-    setPlayerStatusCb(value => {
-      playerStatus = value;
+    log.debug(`PlayerStatus onMount`);
+    setPlayerStatusCb(data => {
+      log.debug(`In PlayerStatus/setPlayerStatusCb ${JSON.stringify(data)}`);
+      playerStatus = data.players;
+      options = data.options;
     });
   });
+
+  async function Begin() {
+    getSocket().emit("ClientMessage", { msgType: "beginTable" }, function(
+      data
+    ) {
+      console.log("CB from beginTable");
+    });
+  }
+
+  async function Buyin() {
+    setDialog({ dialog: "BuyIn" }, null);
+  }
 </script>
 
 <style>
@@ -20,7 +42,7 @@
 
   .playerGrid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 2fr 1fr 1fr 2fr;
     grid-gap: 0px;
   }
 
@@ -38,18 +60,21 @@
         <div>
           <div class="playerGrid">
             <div>Name</div>
-            <div>Money</div>
-            <div>Winnings</div>
+            <div>Chips</div>
             <div>Buy-In</div>
             <div>Status</div>
             {#each playerStatus as p}
               <div class="playerGridItem">{p.name}</div>
-              <div class="playerGridItem">{p.money}</div>
-              <div class="playerGridItem">{p.winnings}</div>
+              <div class="playerGridItem">{p.chips}</div>
               <div class="playerGridItem">{p.buyin}</div>
               <div class="playerGridItem">{p.status}</div>
             {/each}
-
+          </div>
+          <div>
+            {#if options && options.hasBegun === false}
+              <button on:click={Begin}>Begin</button>
+              <button on:click={Buyin}>Buy In</button>
+            {/if}
           </div>
         </div>
       {:else}

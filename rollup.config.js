@@ -1,17 +1,23 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+
+import json from '@rollup/plugin-json';
+import builtins from 'rollup-plugin-node-builtins';
+
 import livereload from 'rollup-plugin-livereload';
 import copyassets from 'rollup-plugin-copy-assets';
+import replace from '@rollup/plugin-replace';
+
 import { terser } from 'rollup-plugin-terser';
-import alias from '@rollup/plugin-alias';
+// import alias from '@rollup/plugin-alias';
 
 const production = !process.env.ROLLUP_WATCH;
 
-const aliases = alias({
-	resolve: ['.svelte', '.js'], //optional, by default this will just look for .js files or folders
-	entries: [{ find: 'src', replacement: 'D:/Projects/poker-svelte/src' }],
-});
+// const aliases = alias({
+// 	resolve: ['.svelte', '.js'], //optional, by default this will just look for .js files or folders
+// 	entries: [{ find: 'src', replacement: 'D:/Projects/poker-svelte/src' }],
+// });
 
 export default {
 	input: 'src/main.js',
@@ -22,7 +28,7 @@ export default {
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
-		aliases,
+		replace({ __buildEnv__: production ? 'production' : 'development' }),
 		copyassets({
 			assets: ['src/assets'],
 		}),
@@ -44,8 +50,13 @@ export default {
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
+			preferBuiltins: true,
 		}),
 		commonjs(),
+		builtins(),
+		json({
+			compact: true,
+		}),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated

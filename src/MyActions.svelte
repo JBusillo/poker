@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte";
-  import { config } from "src/support/config";
-  import { setMyActionsCb } from "src/support/Communication";
+  import { config } from "./support/config";
+  import { setMyActionsCb } from "./support/Communication";
+  import { getSocket } from "./support/Communication";
   let myActions = { buttons: [] };
 
   onMount(() => {
@@ -10,26 +11,14 @@
     });
   });
 
-  //   $: {
-  //     if (myActions && myActions.buttons) {
-  //       myActions.buttons.forEach(el => {
-  //         let id = document.getElementById(el.id);
-  //         id.removeEventListener("click", HandleClick);
-  //         id.addEventListener("click", HandleClick);
-  //       });
-  //     }
-  //   }
-
   async function HandleClick(e) {
-    let url = `${config.server}/doButton?bguid=${e.target.getAttribute(
-      "bguid"
-    )}`;
-    fetch(url)
-      .then(res => res.json())
-      .catch(err => {
-        console.log("There was an error");
-        console.log(err);
-      });
+    getSocket().emit(
+      "ClientMessage",
+      { msgType: "doButton", bguid: e.target.getAttribute("bguid") },
+      function(data) {
+        console.log(data);
+      }
+    );
   }
 </script>
 

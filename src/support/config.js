@@ -12,7 +12,7 @@ function getconfig() {
 			};
 			break;
 		case 'development':
-		case '__buildEnv__':
+			// case '__buildEnv__':
 			cfg = {
 				server: 'http://localhost:8080',
 			};
