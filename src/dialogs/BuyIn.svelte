@@ -15,7 +15,10 @@
       "ClientMessage",
       { msgType: "doBuyIn", amount: amt, uuid },
       function(data) {
-        if (dialogData.return && dialogData.return.data.dialog === "Dealer") {
+        if (
+          dialogData.return &&
+          ["Dealer", "Ante"].includes(dialogData.return.data.dialog)
+        ) {
           dialogData.return.data.chips = data.chips;
         }
         endDialog(dialogData);
@@ -64,8 +67,12 @@
 <div class="wrap">
   <div class="title">Buy-In</div>
   <div class="container">
-    <button class="btn" amt="500" on:click={doBuyIn}>Buy-In for $5.00</button>
-    <button class="btn" amt="1000" on:click={doBuyIn}>Buy-In for $10.00</button>
-    <button class="btn" on:click={doCancel}>Cancel</button>
+    <button id="by-500" class="btn" amt="500" on:click={doBuyIn}>
+      Buy-In for $5.00
+    </button>
+    <button id="by-1000" class="btn" amt="1000" on:click={doBuyIn}>
+      Buy-In for $10.00
+    </button>
+    <button id="by-cancel" class="btn" on:click={doCancel}>Cancel</button>
   </div>
 </div>

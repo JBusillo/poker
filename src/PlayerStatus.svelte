@@ -4,7 +4,7 @@
     setPlayerStatusCb,
     setDialog
   } from "./support/Communication";
-  import { onMount } from "svelte";
+  import { onMount, beforeUpdate } from "svelte";
   import log from "roarr";
 
   export let size;
@@ -13,12 +13,14 @@
   let options;
 
   onMount(() => {
-    log.debug(`PlayerStatus onMount`);
     setPlayerStatusCb(data => {
-      log.debug(`In PlayerStatus/setPlayerStatusCb ${JSON.stringify(data)}`);
       playerStatus = data.players;
       options = data.options;
     });
+  });
+
+  beforeUpdate(() => {
+    console.log(`playerStatus: ${JSON.stringify(playerStatus)} `);
   });
 
   async function Begin() {
@@ -72,8 +74,8 @@
           </div>
           <div>
             {#if options && options.hasBegun === false}
-              <button on:click={Begin}>Begin</button>
-              <button on:click={Buyin}>Buy In</button>
+              <button id="ps-begin" on:click={Begin}>Begin</button>
+              <button id="ps-buyin" on:click={Buyin}>Buy In</button>
             {/if}
           </div>
         </div>

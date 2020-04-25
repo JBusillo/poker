@@ -15,7 +15,7 @@
   }
 
   function addPlayer() {
-    let lname = name ? name : document.getElementById("name").value;
+    let lname = name ? name : document.getElementById("sg-name").value;
     if (!lname) {
       error = "You have to specify a name, estúpido!";
       return;
@@ -30,6 +30,8 @@
         "Hey cabrón!  None of those commie names with more than 10 letters!";
       return;
     }
+
+    document.title = lname;
 
     initCommunication();
 
@@ -74,7 +76,7 @@
         <div>
           What's your name, pinche güey?
           <input
-            id="name"
+            id="sg-name"
             type="text"
             on:keyup={e => {
               if (['Enter', 'NumpadEnter'].includes(e.code)) {
@@ -83,7 +85,7 @@
             }} />
           <div class="error">{error}</div>
         </div>
-        <button on:click={addPlayer}>Add Player</button>
+        <button id="sg-signin" on:click={addPlayer}>Add Player</button>
       </div>
     {/if}
   </div>

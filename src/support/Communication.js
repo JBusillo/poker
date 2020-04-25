@@ -44,18 +44,22 @@ export function setMyActionsCb(value) {
 	setMyActions = value;
 }
 
+let setShowDown = null;
+export function setShowDownCb(value) {
+	setShowDown = value;
+}
+
 export function initCommunication() {
 	console.log(`initCommunication`);
 	socket = io(`${config.server}`, { transport: ['websocket'] });
 	socket.on('PokerMessage', (type, data, fn) => {
+		log.debug(type + ':' + JSON.stringify(data));
 		try {
 			switch (type) {
 				case 'PlayerStatus':
 					setPlayerStatus(data, fn);
 					break;
 				case 'GameStatus':
-					log.debug(JSON.stringify(data));
-
 					setGameStatus(data, fn);
 					break;
 				case 'TableCards':
@@ -72,6 +76,9 @@ export function initCommunication() {
 					break;
 				case 'MyStatus':
 					setMyCards(data, fn);
+					break;
+				case 'ShowDown':
+					setShowDown(data, fn);
 					break;
 				case 'Dialog':
 					setDialog(data, fn);

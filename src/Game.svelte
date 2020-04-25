@@ -73,12 +73,9 @@
 
   // Callback to end a fullscreen dialog
   let endDialog = data => {
-    console.log("in endDialog");
-    console.log(data);
     if (data) console.log(data.return);
     if (data && data.return) {
       setDialog(data.return.data, data.return.callback);
-      //      dialogData;
     } else dialogData = null;
   };
 </script>
@@ -116,9 +113,9 @@
       grid-template-columns: 10fr 70fr 30fr;
       column-gap: 1em;
       grid-template-areas:
-        "SB TC MS"
-        "SB MC MA"
-        "SB GS MA"; /* only one line */
+        "TC TC MS"
+        "MC MC GS"
+        "SB MA MA"; /* only one line */
     }
   }
 </style>
@@ -126,15 +123,16 @@
 <svelte:window on:resize={CalcSize} />
 
 <main>
-  {#if dialogData}
-    <Dialog {endDialog} {dialogData} {dialogCallback} />
-  {/if}
   <div class="container">
+
     <PlayerStatus {size} />
     <MyStatus />
     <GameStatus {size} />
     <TableCards />
     <MyCards />
     <MyActions />
+    {#if dialogData}
+      <Dialog {endDialog} {dialogData} {dialogCallback} />
+    {/if}
   </div>
 </main>

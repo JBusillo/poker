@@ -66,7 +66,7 @@
     }
 
     if (dialogCallback) {
-      dialogCallback({ game: gameGroup, ante: ante, accept: true });
+      dialogCallback({ game: gameGroup, anteAmount: ante, accept: true });
     }
 
     endDialog();
@@ -175,7 +175,7 @@
   }
 </style>
 
-<div class="wrap">
+<div id="dlr-div" class="wrap">
   <div class="title">Set Game and Ante Amount</div>
   <div class="container">
     <div class="games">
@@ -204,9 +204,9 @@
       <button class="resetbtn" on:click={resetAnte}>RESET</button>
     </div>
     <div id="cccc" class="flexCol">
-      <button class="btn" on:click={buyIn}>Buy In</button>
-      <button class="btn" on:click={pass}>Pass</button>
-      <button class="btn" on:click={submit}>OK</button>
+      <button id="dl-buyin" class="btn" on:click={buyIn}>Buy In</button>
+      <button id="dl-pass" class="btn" on:click={pass}>Pass</button>
+      <button id="dl-ok" class="btn" on:click={submit}>OK</button>
     </div>
   </div>
   <div class="error">{errorMessage}</div>

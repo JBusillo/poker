@@ -4,9 +4,8 @@
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
 
   let x = 1;
-  let tableCards = {
-    cards: ["H14", "D14", "S13", "C02"]
-  };
+  let tableCards = { cards: [] };
+  //    cards: ["H14", "D14", "S13", "C02"]
 
   onMount(() => {
     setTableCardsCb(value => {

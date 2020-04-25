@@ -3,7 +3,7 @@
   import { getCard, cardHeight, cardWidth, resizeCards } from "./support/Cards";
   import { afterUpdate, beforeUpdate, onMount } from "svelte";
 
-  let myCards = { cards: ["C14", "D13"] };
+  let myCards = { cards: [] };
   let x = 1;
 
   onMount(() => {
@@ -13,7 +13,10 @@
     });
   });
 
-  beforeUpdate(() => x++);
+  beforeUpdate(() => {
+    x++;
+    console.log(myCards);
+  });
 
   afterUpdate(() => {
     resizeCards("gridMyCards", "MCHead", myCards.cards, "MCCards");
