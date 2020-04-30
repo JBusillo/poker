@@ -4,7 +4,12 @@ export const cardHeight = '220';
 export const cardWidth = '144';
 
 export function getCard(shortCard) {
-	var row = 'CDHS'.indexOf(shortCard.substr(0, 1));
+	//
+	if (shortCard === "XXX")
+	{
+		return `./build/assets/back.svg#svgView(viewBox(0, 0, 72, 110))`;
+	}
+	var row = 'CDHS'.indexOf(shortCard.substr(0, 1)); 
 	var col = '14020304050607080910111213'.indexOf(shortCard.substr(1, 2)) / 2;
 	return `./build/assets/cards.svg#svgView(viewBox(${col * 72}, ${row * 110}, 72, 110))`;
 }
@@ -13,7 +18,7 @@ export function resizeCards(classGrid, classHead, cards, cards_id) {
 	var elGrid = document.getElementsByClassName(classGrid)[0];
 	var elHead = document.getElementsByClassName(classHead)[0];
 	let max_height = elGrid.clientHeight - elHead.clientHeight;
-	let max_width = elGrid.clientWidth;
+	let max_width = elGrid.clientWidth; 
 
 	var ideal_height = max_height;
 	var ideal_width = Math.trunc((72 / 100) * ideal_height);

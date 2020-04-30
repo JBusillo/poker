@@ -1,12 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { config } from "./support/config";
-  import PlayerStatus from "./PlayerStatus.svelte";
-  import MyStatus from "./MyStatus.svelte";
-  import GameStatus from "./GameStatus.svelte";
-  import TableCards from "./TableCards.svelte";
-  import MyCards from "./MyCards.svelte";
-  import MyActions from "./MyActions.svelte";
+  import Table from "./Table.svelte";
   import Dialog from "./dialogs/Dialog.svelte";
   import {
     initCommunication,
@@ -14,7 +9,6 @@
     setDialogCb,
     setDialog
   } from "./support/Communication.js";
-  import log from "roarr";
 
   let size;
   let dialogData = null;
@@ -22,20 +16,14 @@
   let uuid = window.sessionStorage.getItem("uuid");
 
   onMount(() => {
-    // Ensure that `globalThis.ROARR` is configured.
-    globalThis.ROARR = globalThis.ROARR || {};
-    globalThis.ROARR.write = message => {
-      console.log(JSON.parse(message));
-    };
-    log.debug(`Game onMount`);
     // Register Dialog Callback
     setDialogCb((data, cb) => {
-      log.debug(`In Game/setDialogCb`);
       dialogData = data;
       dialogCallback = cb;
     });
-    // set  initial dialog for SignIn
+
     setDialog({ dialog: "SignIn" });
+
     // Ctrl-C will abort server
     document.body.addEventListener(
       "keydown",
@@ -82,7 +70,7 @@
 
 <style>
   main {
-    background-color: wheat;
+    background-color: antiquewhite;
     height: 100vh;
     width: 100vw;
     position: absolute;
@@ -90,47 +78,13 @@
     left: 0;
     color: black;
   }
-
-  .container {
-    display: grid;
-    height: 100vh;
-    width: 100vw;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-gap: 5px;
-    grid-template-areas:
-      "PS TC GS"
-      "PS MC GS"
-      "gride MA MS";
-  }
-
-  @media (max-width: 999px) {
-    .container {
-      display: grid;
-      height: 100vh;
-      width: 100vw;
-      grid-template-rows: 50fr 50fr 10fr;
-      grid-template-columns: 10fr 70fr 30fr;
-      column-gap: 1em;
-      grid-template-areas:
-        "TC TC MS"
-        "MC MC GS"
-        "SB MA MA"; /* only one line */
-    }
-  }
 </style>
 
 <svelte:window on:resize={CalcSize} />
 
 <main>
   <div class="container">
-
-    <PlayerStatus {size} />
-    <MyStatus />
-    <GameStatus {size} />
-    <TableCards />
-    <MyCards />
-    <MyActions />
+    <Table />
     {#if dialogData}
       <Dialog {endDialog} {dialogData} {dialogCallback} />
     {/if}

@@ -24,6 +24,10 @@
   beforeUpdate(() => {
     console.log("in Bet: before Update");
     buttons = [];
+    console.log(
+      `in Bet, allowRaise:${dialogData.allowRaise} sumRaises:${dialogData.sumRaises} alreadyPaid${dialogData.alreadyPaid}`
+    );
+    console.log(`in Bet   ${dialogData.sumRaises}`);
     if (dialogData.allowRaise) {
       if (dialogData.sumRaises > dialogData.alreadyPaid) {
         buttons.push({ action: "see", desc: "See" });
@@ -82,13 +86,23 @@
   }
   .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
     align-items: center;
   }
 
   .container > * {
     margin: 10px;
+  }
+
+  .flexRow {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .flexCol {
+    display: flex;
+    flex-direction: column;
   }
 
   .bet {
@@ -147,15 +161,13 @@
 </style>
 
 <div class="wrap">
-  <div class="title">What to do?</div>
-  {#if dialogData.allowRaise}
-    <div class="container">
-      <div class="flexRow">
-        <div class="bet">Raise: {fraiseAmount}</div>
-        <div class="bet">
-          Chips: {`$${(dialogData.chips / 100).toFixed(2)}`}
-        </div>
-      </div>
+  <div id="pup-bet" class="title">What to do?</div>
+  <div class="container">
+    <div class="flexRow">
+      <div class="bet">Raise: {fraiseAmount}</div>
+      <div class="bet">Chips: {`$${(dialogData.chips / 100).toFixed(2)}`}</div>
+    </div>
+    {#if dialogData.allowRaise}
       <div>
         <button class="cbtn" amt="10" on:click={addRaise}>10¢</button>
         <button class="cbtn bgreen" amt="25" on:click={addRaise}>25¢</button>
@@ -165,14 +177,19 @@
         <button class="cbtn bblack" amt="100" on:click={addRaise}>$1.00</button>
       </div>
       <button class="resetbtn" on:click={resetRaise}>RESET</button>
+    {/if}
+    <div id="cccc" class="flexCol">
+      {#each buttons as b}
+        <button
+          action={b.action}
+          id={'pup-' + b.action}
+          class="btn"
+          on:click={handleAction}>
+          {b.desc}
+        </button>
+      {/each}
     </div>
-  {/if}
-  <div id="cccc" class="flexCol">
-    {#each buttons as b}
-      <button action={b.action} class="btn" on:click={handleAction}>
-        {b.desc}
-      </button>
-    {/each}
   </div>
+
   <div class="error">{errorMessage}</div>
 </div>

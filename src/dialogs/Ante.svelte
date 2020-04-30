@@ -81,11 +81,13 @@
 </style>
 
 <div class="wrap">
-  <div class="title">Time to Ante-Up</div>
+  <div id="pup-ante" class="title">Time to Ante-Up</div>
   <div>Game is {dialogData.game}</div>
   <div>Ante amount is {fante(dialogData.anteAmount)}</div>
   <div class="flexCol">
-    <button class="btn" on:click={payAnte}>Pay the ante</button>
+    <button id="pup-payante" class="btn" on:click={payAnte}>
+      Pay the ante
+    </button>
     <button class="btn" on:click={buyIn}>Buy more chips</button>
     <button class="btn" on:click={skipRound}>Skip this round</button>
     <button class="btn" on:click={takeBreak}>Go on a break</button>

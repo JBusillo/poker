@@ -1,63 +1,47 @@
 <script>
+  import { getSocket, setMyActionsCb } from "./support/Communication";
   import { onMount } from "svelte";
-  import { config } from "./support/config";
-  import { setMyActionsCb } from "./support/Communication";
-  import { getSocket } from "./support/Communication";
-  let myActions = { buttons: [] };
+  export let action;
+
+  let pAction;
 
   onMount(() => {
+    console.log("myActions onMount");
     setMyActionsCb(value => {
-      myActions = value;
+      action = action.action;
+      console.log(`MyAction CB ${JSON.stringify(action)}`);
     });
   });
 
-  async function HandleClick(e) {
-    getSocket().emit(
-      "ClientMessage",
-      { msgType: "doButton", bguid: e.target.getAttribute("bguid") },
-      function(data) {
-        console.log(data);
-      }
-    );
+  function begin() {
+    getSocket().emit("ClientMessage", { msgType: "beginTable" });
+  }
+
+  function dealer() {
+    console.log("dealer");
   }
 </script>
 
 <style>
-  .gridMyActions {
-    grid-area: MA;
-    background-color: lightyellow;
-    min-height: 0;
-  }
-
-  .button1 {
-    color: #fff !important;
-    text-transform: uppercase;
-    text-decoration: none;
-    background: #60a3bc;
-    padding: 20px;
-    border-radius: 50px;
-    display: inline-block;
-    border: none;
-    transition: all 0.4s ease 0s;
-  }
-
-  .button1:hover {
-    text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
-    transition: all 0.4s ease 0s;
+  .btn {
+    background-color: cadetblue;
+    height: 50px;
+    width: 100px;
+    border-radius: 5px;
+    border: 2px solid black;
+    font-weight: bold;
+    padding: 0px;
   }
 </style>
 
-<div class="gridMyActions">
-  <h1>My Actions</h1>
-  {#each myActions.buttons as button}
-    <button
-      id={button.id}
-      bguid={button.bguid}
-      on:click={HandleClick}
-      class="button1"
-      type="button">
-      {button.text}
-    </button>
-  {/each}
-
+<div>
+  {#if action === 'begin'}
+    <button class="btn" on:click={begin}>Begin</button>
+  {/if}
+  {#if action === 'clear'}
+    <div />
+  {/if}
+  {#if action === 'dealer'}
+    <button class="btn" on:click={dealer}>Dealer</button>
+  {/if}
 </div>

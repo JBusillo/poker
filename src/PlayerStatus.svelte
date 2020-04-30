@@ -1,87 +1,39 @@
 <script>
-  import {
-    getSocket,
-    setPlayerStatusCb,
-    setDialog
-  } from "./support/Communication";
-  import { onMount, beforeUpdate } from "svelte";
-  import log from "roarr";
-
-  export let size;
+  import { getCard } from "./support/Cards";
+  import { beforeUpdate, onMount } from "svelte";
+  import { setPlayerStatusCb } from "./support/Communication";
+  export let player;
 
   let playerStatus;
-  let options;
+  let uuid = player.uuid;
 
   onMount(() => {
-    setPlayerStatusCb(data => {
-      playerStatus = data.players;
-      options = data.options;
+    console.log("PlayerStatus.svelte onMount");
+    setPlayerStatusCb(value => {
+      playerStatus = value;
     });
   });
+
+  $: player = player;
 
   beforeUpdate(() => {
-    console.log(`playerStatus: ${JSON.stringify(playerStatus)} `);
+    console.log("bu PlayerStatus");
   });
-
-  async function Begin() {
-    getSocket().emit("ClientMessage", { msgType: "beginTable" }, function(
-      data
-    ) {
-      console.log("CB from beginTable");
-    });
-  }
-
-  async function Buyin() {
-    setDialog({ dialog: "BuyIn" }, null);
-  }
 </script>
 
 <style>
-  .gridPlayerStatus {
-    grid-area: PS;
-    background-color: lightgrey;
-  }
-
-  .playerGrid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 2fr;
-    grid-gap: 0px;
-  }
-
-  .playerGridItem {
-    border: 2px;
-    border-style: solid;
+  .leftbox {
+    margin-top: 3px;
+    border-style: solid none solid solid;
+    border-radius: 3px 0 0 3px;
   }
 </style>
 
-{#if size === 'L'}
-  <div class="gridPlayerStatus">
-    <h1>Players</h1>
-    <div>
-      {#if playerStatus}
-        <div>
-          <div class="playerGrid">
-            <div>Name</div>
-            <div>Chips</div>
-            <div>Buy-In</div>
-            <div>Status</div>
-            {#each playerStatus as p}
-              <div class="playerGridItem">{p.name}</div>
-              <div class="playerGridItem">{p.chips}</div>
-              <div class="playerGridItem">{p.buyin}</div>
-              <div class="playerGridItem">{p.status}</div>
-            {/each}
-          </div>
-          <div>
-            {#if options && options.hasBegun === false}
-              <button id="ps-begin" on:click={Begin}>Begin</button>
-              <button id="ps-buyin" on:click={Buyin}>Buy In</button>
-            {/if}
-          </div>
-        </div>
-      {:else}
-        <div>No Players...</div>
-      {/if}
-    </div>
-  </div>
-{/if}
+<div id={uuid} class="leftbox">
+  <div>{player.name}</div>
+  <div>Status: {player.status}</div>
+  <div>Last Action: {player.lastAction}</div>
+  <div>Chips: {player.chips}</div>
+  <div>Buy Ins: {player.buyIn}</div>
+
+</div>

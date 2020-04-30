@@ -1,7 +1,6 @@
 import { config } from './config';
 import io from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
-import log from 'roarr';
 
 let socket = null;
 
@@ -14,29 +13,24 @@ export function setDialogCb(value) {
 	setDialog = value;
 }
 
-let setPlayerStatus = null;
+let setTable = null;
+export function setTableCb(value) {
+	setTable = value;
+}
+
+let setPlayerStatus = [];
 export function setPlayerStatusCb(value) {
-	setPlayerStatus = value;
+	setPlayerStatus.push(value);
 }
 
-let setGameStatus = null;
-export function setGameStatusCb(value) {
-	setGameStatus = value;
+let setPlayerDealt = [];
+export function setPlayerDealtCb(value) {
+	setPlayerDealt.push(value);
 }
 
-let setTableCards = null;
-export function setTableCardsCb(value) {
-	setTableCards = value;
-}
-
-let setMyCards = null;
-export function setMyCardsCb(value) {
-	setMyCards = value;
-}
-
-let setMyStatus = null;
-export function setMyStatusCb(value) {
-	setMyStatus = value;
+let setGameMessage = null;
+export function setGameMessageCb(value) {
+	setGameMessage = value;
 }
 
 let setMyActions = null;
@@ -44,50 +38,53 @@ export function setMyActionsCb(value) {
 	setMyActions = value;
 }
 
-let setShowDown = null;
-export function setShowDownCb(value) {
-	setShowDown = value;
+let setPlayerLine = null;
+export function setPlayerLineCb(value) {
+	setPlayerLine = value;
+}
+
+let setMyLine = null;
+export function setMyLineCb(value) {
+	setMyLine = value;
+}
+
+let setMyCards = null;
+export function setMyCardsCb(value) {
+	setMyCards = value;
 }
 
 export function initCommunication() {
 	console.log(`initCommunication`);
 	socket = io(`${config.server}`, { transport: ['websocket'] });
-	socket.on('PokerMessage', (type, data, fn) => {
-		log.debug(type + ':' + JSON.stringify(data));
-		try {
-			switch (type) {
-				case 'PlayerStatus':
-					setPlayerStatus(data, fn);
-					break;
-				case 'GameStatus':
-					setGameStatus(data, fn);
-					break;
-				case 'TableCards':
-					setTableCards(data, fn);
-					break;
-				case 'Dialog':
-					setDialog(data, fn);
+	socket.on('PokerMessage', (actions, fn) => {
+		actions.forEach((action) => {
+			switch (action.type) {
+				// case 'Player':
+				// 	break;
+				case 'Players':
+					setTable(action, fn);
 					break;
 				case 'MyActions':
-					setMyActions(data, fn);
+					setMyActions(action, fn);
 					break;
-				case 'MyCards':
-					setMyCards(data, fn);
-					break;
-				case 'MyStatus':
-					setMyCards(data, fn);
-					break;
-				case 'ShowDown':
-					setShowDown(data, fn);
+				case 'GameMessage':
+					setGameMessage(action, fn);
 					break;
 				case 'Dialog':
-					setDialog(data, fn);
+					setDialog(action, fn);
+					break;
+				case 'MyCards':
+					setMyCards(action, fn);
+					break;
+				case 'PlayerStatus':
+					PlayerStatus.forEach((e) => e(action, fn));
+					break;
+				case 'PlayerDealt':
+					setPlayerDealt.forEach((e) => e(action, fn));
 					break;
 				default:
-					throw `Invalid Type for PokerMessage!! ${type}`;
+					throw `Invalid Type for PokerMessage!! ${action.type}`;
 			}
-		} catch (e) {
-			console.log(e);
-		}
+		});
 	});
 }

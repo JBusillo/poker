@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<svg width="72" height="110" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+ <title>blank card</title>
+ <g class="layer">
+  <title>Layer 1</title>
+  <rect id="out" width="72" height="110" rx="6" fill="none" stroke="black" stroke-width=".5"/>
+  <text fill="#000000" font-family="serif" font-size="24" id="svg_1" stroke="#000000" stroke-width="0" text-anchor="middle" transform="matrix(2.68915 0 0 2.58302 -45.2522 -74.1567)" x="29.75" xml:space="preserve" y="57.40625">?</text>
+ </g>
+</svg>

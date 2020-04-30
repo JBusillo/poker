@@ -1,44 +1,50 @@
 <script>
-  import { setTableCardsCb } from "./support/Communication";
-  import { getCard, cardHeight, cardWidth, resizeCards } from "./support/Cards";
-  import { onMount, beforeUpdate, afterUpdate } from "svelte";
+  import { getCard } from "./support/Cards";
+  export let cards;
 
-  let x = 1;
-  let tableCards = { cards: [] };
-  //    cards: ["H14", "D14", "S13", "C02"]
-
-  onMount(() => {
-    setTableCardsCb(value => {
-      tableCards = value;
-      x++;
-    });
-  });
-
-  beforeUpdate(() => x++);
-
-  afterUpdate(() => {
-    resizeCards("gridTableCards", "TCHead", tableCards.cards, "TCCards");
-  });
-
-  if (tableCards) {
-    if (tableCards.cards) {
-    }
+  function select(event) {
+    // let card = event.target.getAttribute('card')
+    // let thisCard = allCards.find(e => e.card === card)
+    // if (thisCard.set === 'myCards') {
+    //   if (thisCard.selected) {
+    //     ;(thisCard.selected = false), selectCount--
+    //     selectMine--
+    //   } else {
+    //     if (selectCount < 5) {
+    //       ;(thisCard.selected = true), selectCount++
+    //       selectMine++
+    //     }
+    //   }
   }
 </script>
 
 <style>
-  .gridTableCards {
-    grid-area: TC;
-    background-color: lightyellow;
-    min-height: 0;
-    min-width: 0;
+  .flexRow {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+  }
+
+  .card {
+    max-width: 72px;
+    max-height: 110px;
+    height: auto;
+    width: auto;
   }
 </style>
 
-<div class="gridTableCards" dummy={x}>
-  <div class="TCHead">Table Cards</div>
-  <div id="TCCards" />
-
+<div class="flexRow">
+  <div class="flexRow" />
+  {#each cards as c}
+    <div
+      on:click={select}
+      card={'dealt' + c}
+      class={c.selected ? 'card selected' : 'card'}>
+      <svg
+        class="svg"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href={getCard(c)} height="110" width="72" />
+      </svg>
+    </div>
+  {/each}
 </div>
