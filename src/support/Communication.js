@@ -28,6 +28,11 @@ export function setPlayerDealtCb(value) {
 	setPlayerDealt.push(value);
 }
 
+let setPlayerShow = [];
+export function setPlayerShowCb(value) {
+	setPlayerShow.push(value);
+}
+
 let setGameMessage = null;
 export function setGameMessageCb(value) {
 	setGameMessage = value;
@@ -53,15 +58,23 @@ export function setMyCardsCb(value) {
 	setMyCards = value;
 }
 
+let setTableCards = null;
+export function setTableCardsCb(value) {
+	setTableCards = value;
+}
+
 export function initCommunication() {
 	console.log(`initCommunication`);
 	socket = io(`${config.server}`, { transport: ['websocket'] });
 	socket.on('PokerMessage', (actions, fn) => {
 		actions.forEach((action) => {
 			switch (action.type) {
-				// case 'Player':
-				// 	break;
+				// This will create players (in app) for all existing players
 				case 'Players':
+					setTable(action, fn);
+					break;
+				// This will add a player (in app) for a new player
+				case 'AddPlayer':
 					setTable(action, fn);
 					break;
 				case 'MyActions':
@@ -76,8 +89,11 @@ export function initCommunication() {
 				case 'MyCards':
 					setMyCards(action, fn);
 					break;
+				case 'TableCards':
+					setTableCards(action, fn);
+					break;
 				case 'PlayerStatus':
-					PlayerStatus.forEach((e) => e(action, fn));
+					setPlayerStatus.forEach((e) => e(action, fn));
 					break;
 				case 'PlayerDealt':
 					setPlayerDealt.forEach((e) => e(action, fn));

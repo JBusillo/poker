@@ -2,6 +2,7 @@
   import { onMount, beforeUpdate, tick } from "svelte";
   import { getSocket, setTableCb } from "./support/Communication";
   import { getCard } from "./support/Cards";
+  import { getMe } from "./Globals.svelte";
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
   import MyLine from "./MyLine.svelte";
@@ -13,27 +14,32 @@
   let selectCount = 0;
   let selectMine = 0;
   let allCards = [];
-  let players = []; // only contains uuid
-  let me;
+  let players = [];
+  let me; // index of me within players
 
-  onMount(() => {
+  onMount(async () => {
     console.log("Table.svelte onMount");
+    players = [];
     setTableCb(action => {
-      // if (action.type === "AddPlayer") {
-      //   console.log("in AddPlayer");
-      //   players.push(action.fields.uuid);
-      //   players = players;
-      // }
+      if (action.type === "AddPlayer") {
+        console.log(action.player);
+        players = [...players, action.player];
+        console.log(players);
+
+        if (!me) {
+          me = players.find(
+            e => e.uuid === window.sessionStorage.getItem("uuid")
+          );
+        }
+      }
       if (action.type === "Players") {
-        me = action.players.find(
-          e => e.uuid === window.sessionStorage.getItem("uuid")
-        );
         players = action.players;
       }
     });
+    await tick();
   });
 
-  $: players = players;
+  beforeUpdate(async () => {});
 </script>
 
 <style>
@@ -67,7 +73,9 @@
     <div>Played Cards</div>
     <div>Other Stuff</div>
     <!--  -->
-    <PlayerLine {players} {showDown} />
+    {#each players as player}
+      <PlayerLine {player} {showDown} />
+    {/each}
   </div>
 
 </div>

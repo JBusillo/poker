@@ -1,23 +1,19 @@
 <script>
   import { getCard } from "./support/Cards";
-  import { beforeUpdate, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { setPlayerStatusCb } from "./support/Communication";
-  export let player;
 
-  let playerStatus;
-  let uuid = player.uuid;
+  export let player;
 
   onMount(() => {
     console.log("PlayerStatus.svelte onMount");
     setPlayerStatusCb(value => {
-      playerStatus = value;
+      player = value;
+      // if (uuid === value.uuid) {
+      //   player = value;
+      //   console.log("in PlayerStatus Callback uuid=uuid");
+      // }
     });
-  });
-
-  $: player = player;
-
-  beforeUpdate(() => {
-    console.log("bu PlayerStatus");
   });
 </script>
 
@@ -29,11 +25,14 @@
   }
 </style>
 
-<div id={uuid} class="leftbox">
-  <div>{player.name}</div>
-  <div>Status: {player.status}</div>
-  <div>Last Action: {player.lastAction}</div>
-  <div>Chips: {player.chips}</div>
-  <div>Buy Ins: {player.buyIn}</div>
-
-</div>
+{#if player}
+  <div id={player.uuid} class="leftbox">
+    <div>{player.name}</div>
+    <div>Status: {player.status}</div>
+    <div>Last Action: {player.lastAction}</div>
+    <div>Chips: {player.chips}</div>
+    <div>Buy Ins: {player.buyIn}</div>
+  </div>
+{:else}
+  <div />
+{/if}

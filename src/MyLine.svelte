@@ -6,11 +6,10 @@
   import MyActions from "./MyActions.svelte";
   export let me;
 
-  $: console.log(`MyLine me   ${JSON.stringify(me)}`);
-
   onMount(() => {
     console.log("myLine onMount");
     setMyLineCb(value => {
+      console.log(`MyLineCb  {JSON.stringify(value)}`);
       me = value;
     });
   });
@@ -60,6 +59,6 @@
 
 </style>
 
-<MyCards myCards={me && me.cards} />
+<MyCards {me} />
 <TableCards cards={['XXX', 'XXX', 'XXX', 'XXX', 'XXX']} />
-<MyActions action={me && me.action} />
+<MyActions {me} />

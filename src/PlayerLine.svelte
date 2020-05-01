@@ -1,25 +1,24 @@
 <script>
-  import { onMount, beforeUpdate } from "svelte";
+  import { onMount, beforeUpdate, tick } from "svelte";
   import { getCard } from "./support/Cards";
   import PlayerStatus from "./PlayerStatus.svelte";
   import PlayerDealt from "./PlayerDealt.svelte";
   import PlayerShow from "./PlayerShow.svelte";
   import { setPlayerLineCb } from "./support/Communication";
-  export let players;
+  export let player;
   export let showDown;
 
   let playerLine;
 
   onMount(() => {
     console.log("PlayerLine.svelte onMount");
-
     setPlayerLineCb(value => {
       playerLine = value;
     });
   });
 
-  beforeUpdate(() => {
-    console.log(`Players   ${JSON.stringify(players)}`);
+  beforeUpdate(async () => {
+    await tick();
   });
 </script>
 
@@ -42,17 +41,22 @@
   }
 </style>
 
-{#each players as player}
-  <PlayerStatus {player} />
+<!-- {#if players.length === 0}
+  <PlayerStatus uuid={null} />
+  <PlayerDealt />
+  <PlayerShow />
+  <div />
+{/if} -->
+
+<PlayerStatus {player} />
+<div class="flexRow midbox">
+  <PlayerDealt {player} />
+</div>
+{#if showDown}
   <div class="flexRow midbox">
-    <PlayerDealt PlayerDealt={{ action: 'PlayerDealt', cards: [] }} />
+    <PlayerShow {player} />
   </div>
-  {#if showDown}
-    <div class="flexRow midbox">
-      <PlayerShow {player} />
-    </div>
-  {:else}
-    <div class="midbox" />
-  {/if}
-  <div class="rightbox" />
-{/each}
+{:else}
+  <div class="midbox" />
+{/if}
+<div class="rightbox" />

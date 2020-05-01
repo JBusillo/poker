@@ -3,18 +3,16 @@
   import PlayerStatus from "./PlayerStatus.svelte";
   import { onMount } from "svelte";
   import { setPlayerDealtCb } from "./support/Communication";
-  export let PlayerDealt;
+
+  export let player;
 
   onMount(() => {
     console.log("PlayerDealt.svelte onMount");
     setPlayerDealtCb(value => {
-      PlayerDealt = value;
-      console.log(`PlayerDealtCb ${JSON.stringify(PlayerDealt)}`);
+      player = value;
+      console.log(`PlayerDealtCb ${JSON.stringify(player)}`);
     });
   });
-
-  $: console.log(`cards   ${JSON.stringify(PlayerDealt.cards)}`);
-  $: PlayerDealt = PlayerDealt;
 </script>
 
 <style>
@@ -26,13 +24,17 @@
   }
 </style>
 
-{#each PlayerDealt.cards as cp}
-  <div class="card">
-    <svg
-      class="svg"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink">
-      <image href={getCard(cp)} height="110" width="72" />
-    </svg>
-  </div>
-{/each}
+{#if player && player.cards}
+  {#each player.cards as cp}
+    <div class="card">
+      <svg
+        class="svg"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href={getCard(cp)} height="110" width="72" />
+      </svg>
+    </div>
+  {/each}
+{:else}
+  <div />
+{/if}

@@ -1,16 +1,19 @@
 <script>
   import { getSocket, setMyActionsCb } from "./support/Communication";
-  import { onMount } from "svelte";
-  export let action;
-
-  let pAction;
+  import { onMount, beforeUpdate } from "svelte";
+  export let me;
 
   onMount(() => {
     console.log("myActions onMount");
     setMyActionsCb(value => {
-      action = action.action;
-      console.log(`MyAction CB ${JSON.stringify(action)}`);
+      me = value;
+      console.log(`MyAction CB ${JSON.stringify(value)}`);
     });
+  });
+
+  beforeUpdate(() => {
+    console.log("me");
+    console.log(me);
   });
 
   function begin() {
@@ -19,6 +22,10 @@
 
   function dealer() {
     console.log("dealer");
+  }
+
+  function buyin() {
+    console.log("buyin");
   }
 </script>
 
@@ -35,13 +42,18 @@
 </style>
 
 <div>
-  {#if action === 'begin'}
-    <button class="btn" on:click={begin}>Begin</button>
-  {/if}
-  {#if action === 'clear'}
-    <div />
-  {/if}
-  {#if action === 'dealer'}
-    <button class="btn" on:click={dealer}>Dealer</button>
+  {#if me}
+    {#each me.buttons as button}
+      <!-- content here -->
+      {#if button === 'begin'}
+        <button class="btn" on:click={begin}>Begin</button>
+      {/if}
+      {#if button === 'buyin'}
+        <button class="btn" on:click={buyin}>Buy In</button>
+      {/if}
+      {#if button === 'dealer'}
+        <button class="btn" on:click={dealer}>Dealer</button>
+      {/if}
+    {/each}
   {/if}
 </div>

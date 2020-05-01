@@ -1,9 +1,17 @@
 <script>
   import { getCard } from "./support/Cards";
-  import PlayerStatus from "./PlayerStatus.svelte";
   import { beforeUpdate } from "svelte";
-  export let player;
-  export let init;
+  import { setPlayerShowCb } from "./support/Communication";
+  import { onMount } from "svelte";
+
+  let PlayerShow;
+
+  onMount(() => {
+    console.log("PlayerShow.svelte onMount");
+    setPlayerShowCb(value => {
+      PlayerShow = value;
+    });
+  });
 </script>
 
 <style>
@@ -15,8 +23,8 @@
   }
 </style>
 
-{#if !init}
-  {#each player.cardsPlayed as cp}
+{#if PlayerShow}
+  {#each PlayerShow.cardsPlayed as cp}
     <div class="card">
       <svg
         class="svg"
@@ -26,4 +34,6 @@
       </svg>
     </div>
   {/each}
+{:else}
+  <div />
 {/if}
