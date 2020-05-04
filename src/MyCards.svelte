@@ -1,19 +1,14 @@
 <script>
-  import { setMyCardsCb } from "./support/Communication";
-  import { onMount, beforeUpdate } from "svelte";
+  import { myCards } from "./support/Communication";
+  import { onMount } from "svelte";
   import { getCard } from "./support/Cards";
-  export let me;
+
+  let me;
 
   onMount(() => {
-    console.log("myCards onMount");
-    setMyCardsCb(value => {
-      console.log(`cb mycards me   ${JSON.stringify(me)}`);
+    myCards.subscribe(value => {
       me = value;
     });
-  });
-
-  beforeUpdate(() => {
-    console.log(`bu mycards me   ${JSON.stringify(me)}`);
   });
 
   function select(event) {}

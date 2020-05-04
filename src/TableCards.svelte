@@ -1,13 +1,12 @@
 <script>
-  import { setTableCardsCb } from "./support/Communication";
+  import { tableCards } from "./support/Communication";
   import { getCard } from "./support/Cards";
   import { onMount } from "svelte";
 
-  export let me;
+  let me;
 
   onMount(() => {
-    console.log("TableCards onMount");
-    setTableCardsCb(value => {
+    tableCards.subscribe(value => {
       me = value;
     });
   });

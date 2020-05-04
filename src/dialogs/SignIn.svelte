@@ -39,7 +39,6 @@
       "ClientMessage",
       { msgType: "addPlayer", uuid: uuid, player: lname },
       function(data) {
-        console.log(`Callback/SignIn/AddPlayer data: ${JSON.stringify(data)}`);
         window.sessionStorage.setItem("uuid", data.uuid);
         window.sessionStorage.setItem("name", lname);
       }
@@ -62,31 +61,29 @@
   }
 </style>
 
-<main>
-  <div class="overlay">
-    <h1>Sign in to Poker</h1>
-    {#if uuid}
+<div class="overlay" pup="signin">
+  <h1>Sign in to Poker</h1>
+  {#if uuid}
+    <div>
+      <div>Are you {name}?</div>
+      <button on:click={addPlayer}>Yes</button>
+      <button pup="signin-no" on:click={resetPlayer}>No</button>
+    </div>
+  {:else}
+    <div>
       <div>
-        <div>Are you {name}?</div>
-        <button on:click={addPlayer}>Yes</button>
-        <button on:click={resetPlayer}>No</button>
+        What's your name?
+        <input
+          id="sg-name"
+          type="text"
+          on:keyup={e => {
+            if (['Enter', 'NumpadEnter'].includes(e.code)) {
+              addPlayer();
+            }
+          }} />
+        <div class="error">{error}</div>
       </div>
-    {:else}
-      <div>
-        <div>
-          What's your name, pinche güey?
-          <input
-            id="sg-name"
-            type="text"
-            on:keyup={e => {
-              if (['Enter', 'NumpadEnter'].includes(e.code)) {
-                addPlayer();
-              }
-            }} />
-          <div class="error">{error}</div>
-        </div>
-        <button id="sg-signin" on:click={addPlayer}>Add Player</button>
-      </div>
-    {/if}
-  </div>
-</main>
+      <button id="sg-signin" on:click={addPlayer}>Add Player</button>
+    </div>
+  {/if}
+</div>

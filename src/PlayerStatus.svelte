@@ -1,20 +1,23 @@
 <script>
   import { getCard } from "./support/Cards";
-  import { onMount } from "svelte";
+  import { onMount, beforeUpdate } from "svelte";
   import { setPlayerStatusCb } from "./support/Communication";
 
   export let player;
+  let uuid;
 
   onMount(() => {
-    console.log("PlayerStatus.svelte onMount");
+    uuid = player.uuid;
     setPlayerStatusCb(value => {
-      player = value;
-      // if (uuid === value.uuid) {
-      //   player = value;
-      //   console.log("in PlayerStatus Callback uuid=uuid");
-      // }
+      if (value.uuid === uuid) {
+        player = value;
+      }
     });
   });
+
+  function fAmount(amt) {
+    return `$${(amt / 100).toFixed(2)}`;
+  }
 </script>
 
 <style>
@@ -30,8 +33,8 @@
     <div>{player.name}</div>
     <div>Status: {player.status}</div>
     <div>Last Action: {player.lastAction}</div>
-    <div>Chips: {player.chips}</div>
-    <div>Buy Ins: {player.buyIn}</div>
+    <div>Chips: {fAmount(player.chips)}</div>
+    <div>Buy Ins: {fAmount(player.buyIn)}</div>
   </div>
 {:else}
   <div />

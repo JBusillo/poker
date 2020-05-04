@@ -4,15 +4,6 @@
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
   import MyActions from "./MyActions.svelte";
-  export let me;
-
-  onMount(() => {
-    console.log("myLine onMount");
-    setMyLineCb(value => {
-      console.log(`MyLineCb  {JSON.stringify(value)}`);
-      me = value;
-    });
-  });
 
   // let allCards = [];
   // tableData.tableCards.forEach(card => {
@@ -59,6 +50,7 @@
 
 </style>
 
-<MyCards {me} />
-<TableCards cards={['XXX', 'XXX', 'XXX', 'XXX', 'XXX']} />
-<MyActions {me} />
+<!-- <MyCards {me} />       ===> Deleted for Store Test           -->
+<MyCards />
+<TableCards />
+<MyActions />

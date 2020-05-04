@@ -5,13 +5,13 @@
   let gameMessage = {};
 
   onMount(() => {
-    console.log("GameMessage.svelte onMount");
     setGameMessageCb(value => {
       gameMessage = value;
     });
   });
 
   $: gameMessage = gameMessage;
+  // $: console.log(`msg: ${gameMessage.message}`);
 </script>
 
 <style>

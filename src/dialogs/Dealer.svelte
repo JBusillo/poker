@@ -54,7 +54,6 @@
   }
 
   function submit() {
-    console.log(gameGroup);
     if (!gameGroup) {
       errorMessage = "A game must be selected.  Please correct";
       return;
@@ -175,7 +174,7 @@
   }
 </style>
 
-<div id="dlr-div" class="wrap">
+<div id="dlr-div" pup="dlg-dealer" class="wrap">
   <div class="title">Set Game and Ante Amount</div>
   <div class="container">
     <div class="games">

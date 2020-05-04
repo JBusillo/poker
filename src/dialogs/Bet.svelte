@@ -1,6 +1,6 @@
 <script>
   import { getSocket } from "../support/Communication";
-  import { beforeUpdate } from "svelte";
+  import { beforeUpdate, onMount } from "svelte";
   export let endDialog;
   export let dialogData;
   export let dialogCallback;
@@ -10,60 +10,87 @@
   // dialogData.chips = player chip amount (available to bet)
   // dialogData.sumRaises = total raise amount for this round
   // dialogData.alreadyPaid = amount already paid towards sumRaises
-  // dialogData.allowRaise = allow player to raise
+  // dialogData.allowRaise = allow player to raise (Rotation 1)
 
   //result.action = check/fold/see/raise/see-raise (side-pot?)
   //result.raiseAmount = Raise amount.  only applies to raise and see-raise
-  //result.paidAmount = paid into pot (for this rotation)
 
   let buttons = [];
   let raiseAmount = 0;
   let paidAmount = 0;
-  let fraiseAmount = "$0.00";
+  let pupdata = "";
+
+  onMount(() => {
+    raiseAmount = 0;
+    paidAmount = 0;
+  });
+
+  function fAmount(amt) {
+    return `${(amt / 100).toFixed(2)}`;
+  }
 
   beforeUpdate(() => {
-    console.log("in Bet: before Update");
+    pupdata =
+      (dialogData.allowRaise ? "1" : "2") + dialogData.numberRound.toString();
+
     buttons = [];
-    console.log(
-      `in Bet, allowRaise:${dialogData.allowRaise} sumRaises:${dialogData.sumRaises} alreadyPaid${dialogData.alreadyPaid}`
-    );
-    console.log(`in Bet   ${dialogData.sumRaises}`);
+    // We're in the first Rotation
     if (dialogData.allowRaise) {
-      if (dialogData.sumRaises > dialogData.alreadyPaid) {
-        buttons.push({ action: "see", desc: "See" });
-        buttons.push({ action: "see-raise", desc: "See and Raise" });
-        buttons.push({ action: "fold", desc: "Fold" });
+      console.log("first rotation");
+      if (dialogData.sumRaises > 0) {
+        buttons.push({
+          cls: "btn",
+          action: `see`,
+          desc: `See the raise: Pay ${fAmount(dialogData.sumRaises)}`
+        });
+        buttons.push({
+          cls: "btn hide",
+          action: "see-raise",
+          desc: `See AND raise: Pay ${fAmount(
+            dialogData.sumRaises
+          )} plus ${fAmount(raiseAmount)}`
+        });
+        buttons.push({ cls: "btn", action: "fold", desc: "Fold" });
       } else {
-        buttons.push({ action: "check", desc: "Check" });
-        buttons.push({ action: "raise", desc: "Raise" });
+        buttons.push({ cls: "btn", action: "check", desc: "Check" });
+        buttons.push({ cls: "btn hide", action: "raise", desc: "Raise" });
       }
     } else {
-      // can only fold or see
-      buttons.push({ action: "see", desc: "See" });
-      buttons.push({ action: "fold", desc: "Fold" });
+      // Second Rotation can only fold or see
+      console.log("second rotation");
+      buttons.push({ cls: "btn", action: "see", desc: "See" });
+      buttons.push({ cls: "btn", action: "fold", desc: "Fold" });
     }
-    buttons = buttons;
+    console.log(`Buttons   ${JSON.stringify(buttons)}`);
   });
 
   function addRaise(event) {
+    let el;
     let increase = Number(event.target.getAttribute("amt"));
     if (increase + raiseAmount > dialogData.chips) {
       errorMessage = "You don't have enough money!";
     } else {
+      console.log(`raiseAmount: ${raiseAmount} increase: ${increase} `);
       raiseAmount += increase;
-      fraiseAmount = `$${(raiseAmount / 100).toFixed(2)}`;
+      el =
+        document.getElementById("raise") ||
+        document.getElementById("see-raise");
+      if (el.classList.contains("hide")) el.classList.remove("hide");
     }
   }
 
   function resetRaise(event) {
-    fraiseAmount = 0;
-    fbet = "$0.00";
+    console.log("Reset Raise");
+    raiseAmount = 0;
+    let el =
+      document.getElementById("raise") || document.getElementById("see-raise");
+    if (!el.classList.contains("hide")) el.classList.add("hide");
   }
 
   function handleAction() {
-    console.log("in handleAction");
     if (dialogCallback) {
       let action = event.target.getAttribute("action");
+      console.log(`Callback = ${action} ${raiseAmount}`);
       dialogCallback({
         action,
         raiseAmount
@@ -153,6 +180,10 @@
     padding: 0px;
   }
 
+  .hide {
+    display: none;
+  }
+
   .error {
     text-align: center;
     font-weight: bolder;
@@ -160,12 +191,17 @@
   }
 </style>
 
-<div class="wrap">
-  <div id="pup-bet" class="title">What to do?</div>
+<div class="wrap" pup="dlg-bet" {pupdata}>
+  <div class="title">What to do?</div>
   <div class="container">
-    <div class="flexRow">
-      <div class="bet">Raise: {fraiseAmount}</div>
-      <div class="bet">Chips: {`$${(dialogData.chips / 100).toFixed(2)}`}</div>
+    <div class="flexCol">
+      {#if dialogData.sumRaises > 0}
+        <div class="bet">Raise to you: ${fAmount(dialogData.sumRaises)}</div>
+      {/if}
+      {#if dialogData.allowRaise && raiseAmount > 0}
+        <div id="my-raise" class="bet">Your Raise: ${fAmount(raiseAmount)}</div>
+      {/if}
+      <div class="bet">Chips: ${fAmount(dialogData.chips)}</div>
     </div>
     {#if dialogData.allowRaise}
       <div>
@@ -182,8 +218,8 @@
       {#each buttons as b}
         <button
           action={b.action}
-          id={'pup-' + b.action}
-          class="btn"
+          id={b.action}
+          class={b.cls}
           on:click={handleAction}>
           {b.desc}
         </button>

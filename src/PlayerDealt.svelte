@@ -1,17 +1,26 @@
 <script>
   import { getCard } from "./support/Cards";
   import PlayerStatus from "./PlayerStatus.svelte";
-  import { onMount } from "svelte";
+  import { onMount, beforeUpdate } from "svelte";
   import { setPlayerDealtCb } from "./support/Communication";
 
-  export let player;
+  export let cards;
+  export let uuid;
+
+  let thisUuid;
 
   onMount(() => {
-    console.log("PlayerDealt.svelte onMount");
+    let thisUuid = uuid;
     setPlayerDealtCb(value => {
-      player = value;
-      console.log(`PlayerDealtCb ${JSON.stringify(player)}`);
+      if ((value.type = "PlayerCards") && value.uuid == thisUuid) {
+        cards = value.cards;
+      }
     });
+  });
+
+  beforeUpdate(() => {
+    // console.log(`bu cards   ${JSON.stringify(player.cards)}`);
+    // cards = player.cards;
   });
 </script>
 
@@ -24,8 +33,8 @@
   }
 </style>
 
-{#if player && player.cards}
-  {#each player.cards as cp}
+{#if cards && cards.length > 0}
+  {#each cards as cp}
     <div class="card">
       <svg
         class="svg"

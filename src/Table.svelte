@@ -18,13 +18,10 @@
   let me; // index of me within players
 
   onMount(async () => {
-    console.log("Table.svelte onMount");
     players = [];
     setTableCb(action => {
       if (action.type === "AddPlayer") {
-        console.log(action.player);
         players = [...players, action.player];
-        console.log(players);
 
         if (!me) {
           me = players.find(
@@ -36,7 +33,7 @@
         players = action.players;
       }
     });
-    await tick();
+    // await tick();
   });
 
   beforeUpdate(async () => {});
@@ -61,12 +58,12 @@
   }
 </style>
 
-<div class="overlay">
+<div class="overlay" pup="table">
   <GameMessage />
   <div class="theGrid">
     <!-- My Hand + Table Cards  -->
     <div>ME!</div>
-    <MyLine {me} />
+    <MyLine />
     <!-- Header for Players at Table  -->
     <div>Name</div>
     <div>Dealt Cards</div>

@@ -11,14 +11,13 @@
   let playerLine;
 
   onMount(() => {
-    console.log("PlayerLine.svelte onMount");
     setPlayerLineCb(value => {
       playerLine = value;
     });
   });
 
   beforeUpdate(async () => {
-    await tick();
+    // await tick();
   });
 </script>
 
@@ -50,7 +49,7 @@
 
 <PlayerStatus {player} />
 <div class="flexRow midbox">
-  <PlayerDealt {player} />
+  <PlayerDealt cards={player.cards} uuid={player.uuid} />
 </div>
 {#if showDown}
   <div class="flexRow midbox">

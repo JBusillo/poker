@@ -1,19 +1,18 @@
 <script>
-  import { getSocket, setMyActionsCb } from "./support/Communication";
-  import { onMount, beforeUpdate } from "svelte";
-  export let me;
+  import {
+    getSocket,
+    setDialog,
+    setMyActionsCb
+  } from "./support/Communication";
+  import { onMount } from "svelte";
+  //  export let me;
+
+  let me;
 
   onMount(() => {
-    console.log("myActions onMount");
     setMyActionsCb(value => {
       me = value;
-      console.log(`MyAction CB ${JSON.stringify(value)}`);
     });
-  });
-
-  beforeUpdate(() => {
-    console.log("me");
-    console.log(me);
   });
 
   function begin() {
@@ -21,11 +20,13 @@
   }
 
   function dealer() {
-    console.log("dealer");
+    // console.log("dealer");
   }
 
-  function buyin() {
-    console.log("buyin");
+  function buyIn(event) {
+    setDialog({
+      dialog: "BuyIn2"
+    });
   }
 </script>
 
@@ -46,10 +47,10 @@
     {#each me.buttons as button}
       <!-- content here -->
       {#if button === 'begin'}
-        <button class="btn" on:click={begin}>Begin</button>
+        <button class="btn" pup="me-begin" on:click={begin}>Begin</button>
       {/if}
       {#if button === 'buyin'}
-        <button class="btn" on:click={buyin}>Buy In</button>
+        <button class="btn" pup="me-buyin" on:click={buyIn}>Buy In</button>
       {/if}
       {#if button === 'dealer'}
         <button class="btn" on:click={dealer}>Dealer</button>

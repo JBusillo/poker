@@ -15,6 +15,9 @@
   let dialogCallback = null;
   let uuid = window.sessionStorage.getItem("uuid");
 
+  //window.localStorage.setItem("debug", "engine,socket.io*");
+  window.localStorage.removeItem("debug");
+
   onMount(() => {
     // Register Dialog Callback
     setDialogCb((data, cb) => {
@@ -70,12 +73,13 @@
 
 <style>
   main {
+    margin: 5px;
     background-color: antiquewhite;
-    height: 100vh;
-    width: 100vw;
+    /* height: 100vh; */
+    /* width: 100vw;
     position: absolute;
     top: 0;
-    left: 0;
+    left: 0; */
     color: black;
   }
 </style>

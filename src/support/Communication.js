@@ -1,6 +1,13 @@
 import { config } from './config';
 import io from 'socket.io-client';
-import { v4 as uuidv4 } from 'uuid';
+
+//-----------------------------------------------------
+import { writable } from 'svelte/store';
+
+export const myCards = writable([]);
+export const tableCards = writable([]);
+
+//-----------------------------------------------------
 
 let socket = null;
 
@@ -53,16 +60,6 @@ export function setMyLineCb(value) {
 	setMyLine = value;
 }
 
-let setMyCards = null;
-export function setMyCardsCb(value) {
-	setMyCards = value;
-}
-
-let setTableCards = null;
-export function setTableCardsCb(value) {
-	setTableCards = value;
-}
-
 export function initCommunication() {
 	console.log(`initCommunication`);
 	socket = io(`${config.server}`, { transport: ['websocket'] });
@@ -84,18 +81,19 @@ export function initCommunication() {
 					setGameMessage(action, fn);
 					break;
 				case 'Dialog':
+					console.log(`Dialog   ${JSON.stringify(action)}`);
 					setDialog(action, fn);
 					break;
 				case 'MyCards':
-					setMyCards(action, fn);
+					myCards.set(action);
 					break;
 				case 'TableCards':
-					setTableCards(action, fn);
+					tableCards.set(action);
 					break;
 				case 'PlayerStatus':
-					setPlayerStatus.forEach((e) => e(action, fn));
+					setPlayerStatus.forEach((e) => e(action.player, fn));
 					break;
-				case 'PlayerDealt':
+				case 'PlayerCards':
 					setPlayerDealt.forEach((e) => e(action, fn));
 					break;
 				default:

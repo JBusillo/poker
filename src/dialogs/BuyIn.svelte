@@ -15,7 +15,9 @@
       "ClientMessage",
       { msgType: "doBuyIn", amount: amt, uuid },
       function(data) {
+        // console.log(`data   ${JSON.stringify(data)}`);
         if (
+          dialogData &&
           dialogData.return &&
           ["Dealer", "Ante"].includes(dialogData.return.data.dialog)
         ) {
@@ -64,7 +66,7 @@
   }
 </style>
 
-<div class="wrap">
+<div class="wrap" pup="dlg-buyin">
   <div class="title">Buy-In</div>
   <div class="container">
     <button id="by-500" class="btn" amt="500" on:click={doBuyIn}>

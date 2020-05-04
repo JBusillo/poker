@@ -7,7 +7,6 @@
   let PlayerShow;
 
   onMount(() => {
-    console.log("PlayerShow.svelte onMount");
     setPlayerShowCb(value => {
       PlayerShow = value;
     });
