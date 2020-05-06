@@ -1,6 +1,4 @@
 <script>
-  import { setMyLineCb } from "./support/Communication";
-  import { onMount } from "svelte";
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
   import MyActions from "./MyActions.svelte";

@@ -1,29 +1,41 @@
 <script>
-  import { tableCards } from "./support/Communication";
-  import { getCard } from "./support/Cards";
   import { onMount } from "svelte";
+  import {
+    tableCards,
+    selectedCards,
+    selectEnabled
+  } from "./support/Communication";
+  import { getCard } from "./support/Cards";
 
   let me;
+  let selecting = false;
+  let selected = [];
 
   onMount(() => {
     tableCards.subscribe(value => {
       me = value;
     });
+    selectedCards.subscribe(value => {
+      selected = value;
+    });
+    selectEnabled.subscribe(value => {
+      selecting = value;
+    });
   });
 
   function select(event) {
-    // let card = event.target.getAttribute('card')
-    // let thisCard = allCards.find(e => e.card === card)
-    // if (thisCard.set === 'myCards') {
-    //   if (thisCard.selected) {
-    //     ;(thisCard.selected = false), selectCount--
-    //     selectMine--
-    //   } else {
-    //     if (selectCount < 5) {
-    //       ;(thisCard.selected = true), selectCount++
-    //       selectMine++
-    //     }
-    //   }
+    if (selecting) {
+      let success;
+      let card = event.currentTarget.getAttribute("card");
+      console.log(`tc select card: ${card}`);
+      if (selected.includes(card)) {
+        selectedCards.remove("TableCards", card);
+      } else {
+        if (selected.length < 5) {
+          selectedCards.add("TableCards", card);
+        }
+      }
+    }
   }
 </script>
 
@@ -39,21 +51,28 @@
     height: auto;
     width: auto;
   }
+
+  .selected {
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 3px;
+    border-color: green;
+  }
 </style>
 
 <div class="flexRow">
   <div class="flexRow" />
   {#if me && me.cards}
-    {#each me.cards as c}
+    {#each me.cards as card}
       <div
         on:click={select}
-        card={'dealt' + c}
-        class={c.selected ? 'card selected' : 'card'}>
+        {card}
+        class={selected.includes(card) ? 'card selected' : 'card'}>
         <svg
           class="svg"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink">
-          <image href={getCard(c)} height="110" width="72" />
+          <image href={getCard(card)} height="110" width="72" />
         </svg>
       </div>
     {/each}

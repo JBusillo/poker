@@ -1,23 +1,50 @@
 <script>
+  import { onMount, beforeUpdate } from "svelte";
+  import SelectCards from "./miniDialogs/SelectCards.svelte";
+  import Betting from "./miniDialogs/Betting.svelte";
   import {
     getSocket,
     setDialog,
-    setMyActionsCb
+    myActions,
+    selectedCards,
+    selectEnabled
   } from "./support/Communication";
-  import { onMount } from "svelte";
-  //  export let me;
 
-  let me;
+  let me = null;
+  let selected = [];
 
   onMount(() => {
-    setMyActionsCb(value => {
+    myActions.subscribe(value => {
       me = value;
     });
+    // selectedCards.subscribe(value => {
+    //   selected = value;
+    // });
+  });
+
+  beforeUpdate(() => {
+    // if (me && me.buttons && me.buttons.includes("selectOK")) {
+    //   selectedCards.reset();
+    //   console.log(
+    //     `ma just reset selectedCards ${JSON.stringify(selectedCards)}`
+    //   );
+    //   selectEnabled.set(true);
+    // }
   });
 
   function begin() {
     getSocket().emit("ClientMessage", { msgType: "beginTable" });
   }
+
+  // Enable Selection in PlayerCards and TableCards
+  // Test to ensure that 5 cards have been selected
+  // function select(event) {
+  //   let action = event.currentTarget.getAttribute("action");
+  //   if (action === "fold" || selected.length === 5) {
+  //     selectEnabled.set(false);
+  //     me.cb({ action, cards: selected });
+  //   }
+  // }
 
   function dealer() {
     // console.log("dealer");
@@ -43,7 +70,17 @@
 </style>
 
 <div>
-  {#if me}
+  {#if me && me.miniDialog === 'SelectCards'}
+    <SelectCards {me} />
+  {/if}
+  {#if me && me.miniDialog === 'Betting'}
+    <Betting {me} />
+  {/if}
+  {#if me && me.miniDialog === 'default'}
+    <div />
+  {/if}
+
+  {#if me && me.buttons}
     {#each me.buttons as button}
       <!-- content here -->
       {#if button === 'begin'}

@@ -1,0 +1,36 @@
+<script>
+  import { onMount } from "svelte";
+
+  import PlayerStatus from "./PlayerStatus.svelte";
+  import PlayerCards from "./PlayerCards.svelte";
+  import PlayerShow from "./PlayerShow.svelte";
+
+  export let player;
+  export let showDown;
+</script>
+
+<style>
+  .flexRow {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .midbox {
+    margin-top: 3px;
+    border-style: solid none solid none;
+    border-color: black;
+  }
+
+  .rightbox {
+    margin-top: 3px;
+    border-style: solid solid solid none;
+    border-radius: 0 3px 3px 0;
+  }
+</style>
+
+<!-- {#if players.length === 0}
+  <PlayerStatus uuid={null} />
+  <PlayerDealt />
+  <PlayerShow />
+  <div />
+{/if} -->

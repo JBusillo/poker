@@ -1,17 +1,14 @@
 <script>
   import { onMount } from "svelte";
-  import { setGameMessageCb } from "./support/Communication";
+  import { gameMessage } from "./support/Communication";
 
-  let gameMessage = {};
+  let msg = "";
 
   onMount(() => {
-    setGameMessageCb(value => {
-      gameMessage = value;
+    gameMessage.subscribe(value => {
+      msg = value;
     });
   });
-
-  $: gameMessage = gameMessage;
-  // $: console.log(`msg: ${gameMessage.message}`);
 </script>
 
 <style>
@@ -23,5 +20,5 @@
 
 <div class="flexRow">
   <div>POKER</div>
-  <div>{gameMessage.message}</div>
+  <div>{msg.message}</div>
 </div>

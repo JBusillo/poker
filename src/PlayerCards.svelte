@@ -1,8 +1,7 @@
 <script>
   import { getCard } from "./support/Cards";
-  import PlayerStatus from "./PlayerStatus.svelte";
-  import { onMount, beforeUpdate } from "svelte";
-  import { setPlayerDealtCb } from "./support/Communication";
+  import { playerCards } from "./support/Communication";
+  import { onMount } from "svelte";
 
   export let cards;
   export let uuid;
@@ -11,16 +10,16 @@
 
   onMount(() => {
     let thisUuid = uuid;
-    setPlayerDealtCb(value => {
-      if ((value.type = "PlayerCards") && value.uuid == thisUuid) {
+    // if no uuid passed, set cards for all players (used to clear cards from table)
+    // otherwise, only update cards for individual player
+    playerCards.subscribe(value => {
+      if (
+        !value.uuid ||
+        ((value.type = "PlayerCards") && value.uuid == thisUuid)
+      ) {
         cards = value.cards;
       }
     });
-  });
-
-  beforeUpdate(() => {
-    // console.log(`bu cards   ${JSON.stringify(player.cards)}`);
-    // cards = player.cards;
   });
 </script>
 

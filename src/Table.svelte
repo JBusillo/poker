@@ -1,42 +1,37 @@
 <script>
-  import { onMount, beforeUpdate, tick } from "svelte";
-  import { getSocket, setTableCb } from "./support/Communication";
+  import { onMount } from "svelte";
+  import { tablePlayers } from "./support/Communication";
   import { getCard } from "./support/Cards";
   import { getMe } from "./Globals.svelte";
+
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
-  import MyLine from "./MyLine.svelte";
-  import PlayerLine from "./PlayerLine.svelte";
+  import MyActions from "./MyActions.svelte";
   import GameMessage from "./GameMessage.svelte";
+  import PlayerStatus from "./PlayerStatus.svelte";
+  import PlayerCards from "./PlayerCards.svelte";
+  import PlayerShow from "./PlayerShow.svelte";
+
+  let players = [];
 
   let showDown = false;
+
+  // for card selection -- not used yet
   let selectedCards = [];
   let selectCount = 0;
   let selectMine = 0;
   let allCards = [];
-  let players = [];
-  let me; // index of me within players
 
-  onMount(async () => {
-    players = [];
-    setTableCb(action => {
-      if (action.type === "AddPlayer") {
-        players = [...players, action.player];
-
-        if (!me) {
-          me = players.find(
-            e => e.uuid === window.sessionStorage.getItem("uuid")
-          );
-        }
+  onMount(() => {
+    tablePlayers.subscribe(value => {
+      if (value.type === "AddPlayer") {
+        players = [...players, value.player];
       }
-      if (action.type === "Players") {
-        players = action.players;
+      if (value.type === "Players") {
+        players = value.players;
       }
     });
-    // await tick();
   });
-
-  beforeUpdate(async () => {});
 </script>
 
 <style>
@@ -56,22 +51,47 @@
     grid-gap: 0px;
     /* justify-items: left; */
   }
+
+  .flexRow {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .midbox {
+    margin-top: 3px;
+    border-style: solid none solid none;
+    border-color: black;
+  }
+
+  .rightbox {
+    margin-top: 3px;
+    border-style: solid solid solid none;
+    border-radius: 0 3px 3px 0;
+  }
 </style>
 
 <div class="overlay" pup="table">
   <GameMessage />
   <div class="theGrid">
-    <!-- My Hand + Table Cards  -->
-    <div>ME!</div>
-    <MyLine />
-    <!-- Header for Players at Table  -->
-    <div>Name</div>
-    <div>Dealt Cards</div>
-    <div>Played Cards</div>
-    <div>Other Stuff</div>
-    <!--  -->
+    <!-- Player -->
+    <MyActions />
+    <MyCards />
+    <TableCards />
+    <div />
+    <!-- Players  -->
     {#each players as player}
-      <PlayerLine {player} {showDown} />
+      <PlayerStatus {player} />
+      <div class="flexRow midbox">
+        <PlayerCards cards={player.cards} uuid={player.uuid} />
+      </div>
+      {#if showDown}
+        <div class="flexRow midbox">
+          <PlayerShow {player} />
+        </div>
+      {:else}
+        <div class="midbox" />
+      {/if}
+      <div class="rightbox" />
     {/each}
   </div>
 
