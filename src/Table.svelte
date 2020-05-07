@@ -47,7 +47,7 @@
 
   .theGrid {
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: 2fr 2fr 5fr;
     grid-gap: 0px;
     /* justify-items: left; */
   }
@@ -55,6 +55,11 @@
   .flexRow {
     display: flex;
     flex-direction: row;
+  }
+
+  .flexCol {
+    display: flex;
+    flex-direction: column;
   }
 
   .midbox {
@@ -72,27 +77,27 @@
 
 <div class="overlay" pup="table">
   <GameMessage />
-  <div class="theGrid">
+  <div class="flexCol">
     <!-- Player -->
-    <MyActions />
-    <MyCards />
-    <TableCards />
-    <div />
+    <div class="theGrid">
+      <MyActions />
+      <MyCards />
+      <TableCards />
+    </div>
     <!-- Players  -->
-    {#each players as player}
-      <PlayerStatus {player} />
-      <div class="flexRow midbox">
-        <PlayerCards cards={player.cards} uuid={player.uuid} />
-      </div>
-      {#if showDown}
-        <div class="flexRow midbox">
-          <PlayerShow {player} />
+    <div class="flexCol">
+      {#each players as player}
+        <div class="theGrid">
+          <PlayerStatus {player} />
+          <div class="flexRow midbox">
+            <PlayerCards cards={player.cards} uuid={player.uuid} />
+          </div>
+          <div class="flexRow rightbox">
+            <PlayerShow cards={[]} uuid={player.uuid} />
+          </div>
         </div>
-      {:else}
-        <div class="midbox" />
-      {/if}
-      <div class="rightbox" />
-    {/each}
+      {/each}
+    </div>
   </div>
 
 </div>

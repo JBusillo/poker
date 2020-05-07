@@ -75,16 +75,11 @@
   main {
     margin: 5px;
     background-color: antiquewhite;
-    /* height: 100vh; */
-    /* width: 100vw;
-    position: absolute;
-    top: 0;
-    left: 0; */
     color: black;
   }
 </style>
 
-<svelte:window on:resize={CalcSize} />
+<!-- <svelte:window on:resize={CalcSize} /> -->
 
 <main>
   <div class="container">

@@ -11,10 +11,18 @@
     thisUuid = player.uuid;
     plr = player;
 
+    // First Time: Other players
+    console.log(
+      `ps onMount thisUuid: ${thisUuid} player: ${JSON.stringify(player)}`
+    );
+
     playerStatus.subscribe(value => {
-      if (value.uuid == thisUuid) {
-        plr = value.player;
-        console.log(`ps   ${JSON.stringify(plr)}`);
+      if (value) {
+        console.log(`ps value ${JSON.stringify(value)}`);
+        if (value.player.uuid === thisUuid) {
+          console.log(`ps matched uuid ${JSON.stringify(value.player)}`);
+          plr = value.player;
+        }
       }
     });
 

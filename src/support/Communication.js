@@ -9,8 +9,9 @@ export const tableCards = writable([]);
 export const playerCards = writable([]);
 export const gameMessage = writable([]);
 export const myActions = writable([]);
-export const playerStatus = writable([]);
+export const playerStatus = writable(null);
 export const tablePlayers = writable([]);
+export const playerShow = writable([]);
 export const highLight = writable('');
 export const selectedCards = fSelectedCards();
 
@@ -95,9 +96,11 @@ export function initCommunication() {
 				case 'Players':
 				// Sent to all players:  adds a new player to the table
 				case 'AddPlayer':
+					console.log(`comm AddPlayer   ${JSON.stringify(action)}`);
 					tablePlayers.set(action);
 					break;
 				case 'PlayerStatus':
+					console.log(`comm playerStatus  ${JSON.stringify(action)}`);
 					playerStatus.set(action);
 					break;
 				case 'MyActions':
@@ -119,6 +122,9 @@ export function initCommunication() {
 					break;
 				case 'HighLight':
 					highLight.set(action);
+					break;
+				case 'PlayerShow':
+					playerShow.set(action);
 					break;
 				default:
 					throw `Invalid Type for PokerMessage!! ${action.type}`;
