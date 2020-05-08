@@ -7,13 +7,17 @@ import { writable } from 'svelte/store';
 export const myCards = writable([]);
 export const tableCards = writable([]);
 export const playerCards = writable([]);
-export const gameMessage = writable([]);
 export const myActions = writable([]);
 export const playerStatus = writable(null);
 export const tablePlayers = writable([]);
 export const playerShow = writable([]);
 export const highLight = writable('');
 export const selectedCards = fSelectedCards();
+
+export const infoGame = writable('');
+export const infoPot = writable(0);
+export const infoMsg = writable('');
+export const infoName = writable('');
 
 export const selectEnabled = writable(false);
 //-----------------------------------------------------
@@ -88,7 +92,6 @@ export function initCommunication() {
 		actions.forEach((action) => {
 			switch (action.type) {
 				case 'Dialog':
-					console.log(`Dialog   ${JSON.stringify(action)}`);
 					setDialog(action, fn);
 					break;
 				// ================== using Store
@@ -96,20 +99,14 @@ export function initCommunication() {
 				case 'Players':
 				// Sent to all players:  adds a new player to the table
 				case 'AddPlayer':
-					console.log(`comm AddPlayer   ${JSON.stringify(action)}`);
 					tablePlayers.set(action);
 					break;
 				case 'PlayerStatus':
-					console.log(`comm playerStatus  ${JSON.stringify(action)}`);
 					playerStatus.set(action);
 					break;
 				case 'MyActions':
-					console.log(`ma   ${JSON.stringify(action)}`);
 					action.cb = fn;
 					myActions.set(action);
-					break;
-				case 'GameMessage':
-					gameMessage.set(action);
 					break;
 				case 'MyCards':
 					myCards.set(action);
@@ -126,6 +123,21 @@ export function initCommunication() {
 				case 'PlayerShow':
 					playerShow.set(action);
 					break;
+				case 'InfoGame':
+					infoGame.set(action);
+					break;
+				case 'InfoPot':
+					console.log(`pot   ${JSON.stringify(action)}`);
+					infoPot.set(action);
+					break;
+				case 'InfoMsg':
+					infoMsg.set(action);
+					break;
+				case 'InfoName':
+					console.log(`name   ${JSON.stringify(action)}`);
+					infoName.set(action);
+					break;
+
 				default:
 					throw `Invalid Type for PokerMessage!! ${action.type}`;
 			}

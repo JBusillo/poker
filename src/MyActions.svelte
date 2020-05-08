@@ -17,34 +17,11 @@
     myActions.subscribe(value => {
       me = value;
     });
-    // selectedCards.subscribe(value => {
-    //   selected = value;
-    // });
-  });
-
-  beforeUpdate(() => {
-    // if (me && me.buttons && me.buttons.includes("selectOK")) {
-    //   selectedCards.reset();
-    //   console.log(
-    //     `ma just reset selectedCards ${JSON.stringify(selectedCards)}`
-    //   );
-    //   selectEnabled.set(true);
-    // }
   });
 
   function begin() {
     getSocket().emit("ClientMessage", { msgType: "beginTable" });
   }
-
-  // Enable Selection in PlayerCards and TableCards
-  // Test to ensure that 5 cards have been selected
-  // function select(event) {
-  //   let action = event.currentTarget.getAttribute("action");
-  //   if (action === "fold" || selected.length === 5) {
-  //     selectEnabled.set(false);
-  //     me.cb({ action, cards: selected });
-  //   }
-  // }
 
   function dealer() {
     // console.log("dealer");

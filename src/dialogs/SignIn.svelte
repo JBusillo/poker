@@ -1,6 +1,10 @@
 <script>
   import { config } from "../support/config";
-  import { getSocket, initCommunication } from "../support/Communication";
+  import {
+    getSocket,
+    initCommunication,
+    infoName
+  } from "../support/Communication";
   export let endDialog;
   // export let dialogData;
   // export let dialogCallback;

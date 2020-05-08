@@ -27,7 +27,6 @@
     if (selecting) {
       let success;
       let card = event.currentTarget.getAttribute("card");
-      console.log(`tc select card: ${card}`);
       if (selected.includes(card)) {
         selectedCards.remove("TableCards", card);
       } else {

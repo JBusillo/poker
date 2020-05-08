@@ -7,7 +7,7 @@
   import TableCards from "./TableCards.svelte";
   import MyCards from "./MyCards.svelte";
   import MyActions from "./MyActions.svelte";
-  import GameMessage from "./GameMessage.svelte";
+  import InfoBar from "./InfoBar.svelte";
   import PlayerStatus from "./PlayerStatus.svelte";
   import PlayerCards from "./PlayerCards.svelte";
   import PlayerShow from "./PlayerShow.svelte";
@@ -76,7 +76,7 @@
 </style>
 
 <div class="overlay" pup="table">
-  <GameMessage />
+  <InfoBar />
   <div class="flexCol">
     <!-- Player -->
     <div class="theGrid">
@@ -93,7 +93,7 @@
             <PlayerCards cards={player.cards} uuid={player.uuid} />
           </div>
           <div class="flexRow rightbox">
-            <PlayerShow cards={[]} uuid={player.uuid} />
+            <PlayerShow uuid={player.uuid} />
           </div>
         </div>
       {/each}

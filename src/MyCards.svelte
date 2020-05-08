@@ -16,11 +16,9 @@
       me = value;
     });
     selectedCards.subscribe(value => {
-      console.log(`mc selectedCards    ${JSON.stringify(value)}`);
       selected = value;
     });
     selectEnabled.subscribe(value => {
-      console.log(`mc selectEnabled    ${JSON.stringify(value)}`);
       selecting = value;
     });
   });

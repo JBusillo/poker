@@ -11,28 +11,32 @@
     thisUuid = player.uuid;
     plr = player;
 
-    // First Time: Other players
-    console.log(
-      `ps onMount thisUuid: ${thisUuid} player: ${JSON.stringify(player)}`
-    );
-
     playerStatus.subscribe(value => {
       if (value) {
-        console.log(`ps value ${JSON.stringify(value)}`);
         if (value.player.uuid === thisUuid) {
-          console.log(`ps matched uuid ${JSON.stringify(value.player)}`);
           plr = value.player;
         }
       }
     });
 
+    // action='HighLight'  {uuid} action='only'/'on'/'off'/'reset'
     highLight.subscribe(value => {
-      if (value.uuid == thisUuid) {
-        plr.highLight = true;
-      } else {
-        plr.highLight = false;
+      let prevHighLight = plr.highLight;
+      switch (value.action) {
+        case "only":
+          plr.highLight = value.uuid == thisUuid ? true : false;
+          break;
+        case "on":
+          plr.highLight = value.uuid == thisUuid ? true : plr.highLight;
+          break;
+        case "off":
+          plr.highLight = value.uuid == thisUuid ? false : plr.highLight;
+          break;
+        case "reset":
+          plr.highLight = false;
       }
-      plr = plr;
+      // force re-render if highLight has changed
+      if (plr.highLight !== prevHighLight) plr = plr;
     });
   });
 

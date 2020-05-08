@@ -45,7 +45,6 @@
       buttons.push({ action: "see", desc: "See" });
       buttons.push({ action: "fold", desc: "Fold" });
     }
-    console.log(`Buttons   ${JSON.stringify(buttons)}`);
   });
 
   function fAmount(amt) {

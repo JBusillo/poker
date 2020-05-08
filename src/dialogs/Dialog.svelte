@@ -6,7 +6,6 @@
   import SignIn from "./SignIn.svelte";
   import Ante from "./Ante.svelte";
   import BuyIn from "./BuyIn.svelte";
-  import Bet from "./Bet.svelte";
   export let endDialog;
   export let dialogData;
   export let dialogCallback;
@@ -69,12 +68,6 @@
         component: BuyIn,
         data: false,
         cb: false,
-        class: "abs"
-      });
-      dialogMap.set("Bet", {
-        component: Bet,
-        data: true,
-        cb: true,
         class: "abs"
       });
     }
