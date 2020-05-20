@@ -1,42 +1,43 @@
 <script>
-  import { getSocket } from "../support/Communication";
-  export let endDialog;
-  export let dialogData;
+  import { getSocket, infoChips } from "../support/Communication";
+  import { registerDump } from "../support/Dumper.js";
+  import { onMount } from "svelte";
+
+  //  import BuyIn from "./miniDialogs/BuyIn.svelte";
+  export let cb;
+
   let errorMessage = "";
 
-  let buyin = 0;
-  let fbuyin = "$0.00";
+  onMount(() => {
+    return registerDump("BuyIn.svelte", errorMessage);
+  });
 
   function doBuyIn(event) {
     let amt = Number(event.target.getAttribute("amt"));
     let uuid = window.sessionStorage.getItem("uuid");
-
     getSocket().emit(
       "ClientMessage",
       { msgType: "doBuyIn", amount: amt, uuid },
       function(data) {
-        // console.log(`data   ${JSON.stringify(data)}`);
-        if (
-          dialogData &&
-          dialogData.return &&
-          ["Dealer", "Ante"].includes(dialogData.return.data.dialog)
-        ) {
-          dialogData.return.data.chips = data.chips;
+        infoChips.set(data.chips);
+        if (data.errorMessage) {
+          errorMessage = data.errorMessage;
+        } else {
+          cb();
         }
-        endDialog(dialogData);
       }
     );
   }
 
-  function doCancel(event) {
-    endDialog(dialogData);
+  function doCancel() {
+    cb();
   }
 </script>
 
 <style>
   .wrap {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .title {
@@ -46,7 +47,7 @@
   }
   .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
     align-items: center;
   }
@@ -64,6 +65,12 @@
     font-weight: bold;
     padding: 0px;
   }
+
+  .error {
+    text-align: center;
+    font-weight: bolder;
+    color: red;
+  }
 </style>
 
 <div class="wrap" pup="dlg-buyin">
@@ -77,4 +84,6 @@
     </button>
     <button id="by-cancel" class="btn" on:click={doCancel}>Cancel</button>
   </div>
+  <div class="error">{errorMessage}</div>
+
 </div>

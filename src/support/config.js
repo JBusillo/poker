@@ -2,8 +2,8 @@ function getconfig() {
 	// return {
 	// 	server: 'http://localhost:8080',
 	// };
-	var env = '__buildEnv__';
-	var cfg = null;
+	const env = '__buildEnv__';
+	let cfg = null;
 
 	switch (env) {
 		case 'production':

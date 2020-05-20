@@ -1,17 +1,21 @@
 <script>
-  import { config } from "../support/config";
-  import {
-    getSocket,
-    initCommunication,
-    infoName
-  } from "../support/Communication";
-  export let endDialog;
-  // export let dialogData;
-  // export let dialogCallback;
+  import { getSocket, initCommunication } from "../support/Communication";
+  import { registerDump } from "../support/Dumper.js";
+  import { onMount, afterUpdate } from "svelte";
+
+  export let cb;
 
   let name = window.sessionStorage.getItem("name");
   let uuid = window.sessionStorage.getItem("uuid");
   let error = "";
+
+  onMount(() => {
+    return registerDump("SignIn.svelte", name, uuid, error);
+  });
+
+  afterUpdate(() => {
+    if (uuid === null) document.getElementById("sg-name").focus();
+  });
 
   function resetPlayer() {
     name = null;
@@ -45,9 +49,12 @@
       function(data) {
         window.sessionStorage.setItem("uuid", data.uuid);
         window.sessionStorage.setItem("name", lname);
+        document
+          .getElementById("pupTag")
+          .setAttribute("puptag", `signin.${data.uuid}`);
       }
     );
-    endDialog();
+    cb();
   }
 </script>
 
@@ -65,13 +72,13 @@
   }
 </style>
 
-<div class="overlay" pup="signin">
+<div class="overlay" id="sg-dialog">
   <h1>Sign in to Poker</h1>
   {#if uuid}
     <div>
       <div>Are you {name}?</div>
       <button on:click={addPlayer}>Yes</button>
-      <button pup="signin-no" on:click={resetPlayer}>No</button>
+      <button id="sg-no" on:click={resetPlayer}>No</button>
     </div>
   {:else}
     <div>

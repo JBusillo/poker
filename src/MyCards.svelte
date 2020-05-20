@@ -1,42 +1,45 @@
 <script>
   import { onMount } from "svelte";
+  import { registerDump } from "./support/Dumper.js";
   import {
     myCards,
     selectedCards,
-    selectEnabled
+    selectEnabled,
+    discardEnabled
   } from "./support/Communication";
   import { getCard } from "./support/Cards";
 
-  let me;
-  let selecting = false;
-  let selected = [];
-
   onMount(() => {
-    myCards.subscribe(value => {
-      me = value;
-    });
-    selectedCards.subscribe(value => {
-      selected = value;
-    });
-    selectEnabled.subscribe(value => {
-      selecting = value;
-    });
+    return registerDump("MyCards.svelte");
   });
 
   function select(event) {
-    if (selecting) {
-      let success;
+    if ($selectEnabled || $discardEnabled) {
       let card = event.currentTarget.getAttribute("card");
-      console.log(`tc select card: ${card}`);
-      if (selected.includes(card)) {
+      if ($selectedCards.includes(card)) {
         selectedCards.remove("MyCards", card);
       } else {
-        if (selected.length < 5) {
-          selectedCards.add("MyCards", card);
-        }
+        selectedCards.add("MyCards", card);
       }
     }
   }
+
+  // var can = document.getElementById('canvas1');
+  // var ctx = can.getContext('2d');
+  // const image = document.getElementById('source');
+
+  // image.addEventListener('load', e => {
+  //   ctx.drawImage(image, 0, 0, 150, 150, 0, 0, 150, 150);
+  //   ctx.lineWidth = 5;
+  //   ctx.strokeStyle = 'red';
+  //   ctx.beginPath();
+  //   ctx.moveTo(0,0);
+  //   ctx.lineTo(150,150);
+  //   ctx.moveTo(0,150);
+  //   ctx.lineTo(150,0);
+  //   ctx.closePath();
+  //   ctx.stroke();
+  // });
 </script>
 
 <style>
@@ -60,14 +63,26 @@
   }
 </style>
 
-<div class="flexRow">
-  <div class="flexRow" />
-  {#if me && me.cards}
-    {#each me.cards as card}
+<!-- <canvas id="canvas1" width="400" height="400">
+</canvas>
+
+<div style="display:none;">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <img id="source"
+       src="http://upload.wikimedia.org/wikipedia/commons/d/d2/Svg_example_square.svg"
+       width="150" height="150">
+  </svg>
+</div> -->
+
+<div id="mc-cards" class="flexRow">
+  {#if $myCards && $myCards.cards}
+    {#each $myCards.cards as card}
       <div
         on:click={select}
         {card}
-        class={selected.includes(card) ? 'card sel' : 'card'}>
+        class={$selectedCards.includes(card) ? 'card sel' : 'card'}>
         <svg
           class="svg"
           xmlns="http://www.w3.org/2000/svg"

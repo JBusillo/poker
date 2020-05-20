@@ -1,35 +1,31 @@
 <script>
-  import { onMount } from "svelte";
+  import { beforeUpdate } from "svelte";
+  import Admin from "./miniDialogs/Admin.svelte";
   import {
     infoGame,
     infoPot,
     infoMsg,
-    infoName
+    myStatus,
+    pupTag
   } from "./support/Communication";
 
-  let message = "";
-  let game = "Not Set";
-  let pot = 0;
-  let name = "Not Set";
+  let uuid = window.sessionStorage.getItem("uuid");
+  let adminDialog = false;
 
-  onMount(() => {
-    infoGame.subscribe(value => {
-      game = value.game;
-    });
-    infoPot.subscribe(value => {
-      pot = value.pot;
-    });
-    infoMsg.subscribe(value => {
-      console.log(`ib value   ${JSON.stringify(value)}`);
-      message = value.message;
-    });
-    infoName.subscribe(value => {
-      name = value.name;
-    });
+  beforeUpdate(() => {
+    if (!uuid) uuid = window.sessionStorage.getItem("uuid");
   });
 
   function fAmount(amt) {
     return `${(amt / 100).toFixed(2)}`;
+  }
+
+  const adminCb = () => {
+    adminDialog = false;
+  };
+
+  function handleClick() {
+    adminDialog = true;
   }
 </script>
 
@@ -45,11 +41,27 @@
     padding: 2px;
     margin-bottom: 20px;
   }
+
+  .btn {
+    border-radius: 5px;
+    border: 2px solid black;
+    font-weight: bold;
+    padding: 2px;
+    margin-bottom: 20px;
+  }
 </style>
 
 <div class="flexRow">
-  <div class="info">Player: {name}</div>
-  <div class="info">Game: {game}</div>
-  <div class="info">Pot: {fAmount(pot)}</div>
-  <div class="info">Message: {message}</div>
+  {#if adminDialog}
+    <Admin {adminCb} />
+  {:else}
+    <div class="info">Player: {$myStatus.name}</div>
+    <div class="info">Game: {$infoGame}</div>
+    <div class="info">Chips: {fAmount($myStatus.chips)}</div>
+    <div class="info">Pot: {fAmount($infoPot)}</div>
+    <div class="info">Message: {$infoMsg}</div>
+    <div id="pupTag" puptag={$pupTag} />
+    <button class="btn" on:click={handleClick}>Admin</button>
+  {/if}
+
 </div>

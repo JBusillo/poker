@@ -10,16 +10,25 @@ export const playerCards = writable([]);
 export const myActions = writable([]);
 export const playerStatus = writable(null);
 export const tablePlayers = writable([]);
-export const playerShow = writable([]);
+export const playerShow = writable(null);
 export const highLight = writable('');
 export const selectedCards = fSelectedCards();
+export const myStatus = writable({});
 
-export const infoGame = writable('');
+export const infoGame = writable('Not Set');
 export const infoPot = writable(0);
 export const infoMsg = writable('');
-export const infoName = writable('');
-
+export const infoChips = writable(0);
+export const gameResults = writable(null);
+export const pupTag = writable(null);
+export const screenDialog = writable(null);
 export const selectEnabled = writable(false);
+export const discardEnabled = writable(false);
+// export const isOnBreak = writable(false);
+// export const isOnBreakNextRound = writable(false);
+
+export const gamePaused = writable(false);
+
 //-----------------------------------------------------
 //
 function fSelectedCards() {
@@ -31,17 +40,16 @@ function fSelectedCards() {
 	return {
 		subscribe,
 		add: (pile, card) => {
-			if (TableCards.length + MyCards.length < 5)
-				switch (pile) {
-					case 'TableCards':
-						TableCards.push(card);
-						break;
-					case 'MyCards':
-						MyCards.push(card);
-						break;
-					default:
-						throw Error('Invalid Pile on add Selected Cards');
-				}
+			switch (pile) {
+				case 'TableCards':
+					TableCards.push(card);
+					break;
+				case 'MyCards':
+					MyCards.push(card);
+					break;
+				default:
+					throw Error('Invalid Pile on add Selected Cards');
+			}
 			set([...TableCards, ...MyCards]);
 		},
 		remove: (pile, card) => {
@@ -56,6 +64,9 @@ function fSelectedCards() {
 					throw Error('Invalid Pile on remove Selected Cards');
 			}
 			set([...TableCards, ...MyCards]);
+		},
+		getCounts: () => {
+			return { MyCards: MyCards.length, TableCards: TableCards.length };
 		},
 		reset: () => {
 			// remove all cards
@@ -97,6 +108,8 @@ export function initCommunication() {
 				// ================== using Store
 				// Sent only to a new player: adds the already existing players to the table
 				case 'Players':
+					tablePlayers.set(action);
+					break;
 				// Sent to all players:  adds a new player to the table
 				case 'AddPlayer':
 					tablePlayers.set(action);
@@ -105,6 +118,7 @@ export function initCommunication() {
 					playerStatus.set(action);
 					break;
 				case 'MyActions':
+					console.log(`action   ${JSON.stringify(action)}`);
 					action.cb = fn;
 					myActions.set(action);
 					break;
@@ -124,18 +138,28 @@ export function initCommunication() {
 					playerShow.set(action);
 					break;
 				case 'InfoGame':
-					infoGame.set(action);
+					infoGame.set(action.game);
 					break;
 				case 'InfoPot':
-					console.log(`pot   ${JSON.stringify(action)}`);
-					infoPot.set(action);
+					infoPot.set(action.pot);
 					break;
 				case 'InfoMsg':
-					infoMsg.set(action);
+					infoMsg.set(action.message);
 					break;
-				case 'InfoName':
-					console.log(`name   ${JSON.stringify(action)}`);
-					infoName.set(action);
+				case 'GameResults':
+					gameResults.set(action);
+					break;
+				case 'PupTag':
+					pupTag.set(action.tag);
+					break;
+				case 'PauseGame':
+					gamePaused.set(true);
+					break;
+				case 'ResumeGame':
+					gamePaused.set(false);
+					break;
+				case 'Reload':
+					location.reload();
 					break;
 
 				default:

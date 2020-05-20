@@ -3,8 +3,9 @@
   import { registerDump } from "../support/Dumper.js";
   import {
     selectedCards,
-    selectEnabled,
-    myActions
+    discardEnabled,
+    myActions,
+    myCards
   } from "../support/Communication";
 
   export let me;
@@ -14,37 +15,36 @@
   // Bind to store
   onMount(() => {
     selectedCards.reset();
-    selectEnabled.set(true);
+    discardEnabled.set(true);
 
     return registerDump(
-      "SelectCards.svelte",
+      "Discard.svelte",
       me,
       selected,
-      $selectEnabled,
+      $discardEnabled,
       $selectedCards
     );
   });
 
-  // Enable Selection in PlayerCards and TableCards
-  // Test to ensure that 5 cards have been selected
-  // actions are "ok" and "fold"
+  // Enable Selection for discard in PlayerCards
+  // (there are no table cards, no need for specificity)
+  // Tests are based on "rule" passed to dialog
+  // The only valid action is "ok".
   function select(event) {
     let action = event.currentTarget.getAttribute("action");
 
     if (action === "ok") {
       let counts = selectedCards.getCounts();
       switch (me.rule) {
-        case "5Total":
-          if (counts.MyCards + counts.TableCards !== 5) return;
-          break;
-        case "2M/3T":
-          if (counts.MyCards !== 2 || counts.TableCards !== 3) return;
+        case "1Card":
+          if (counts.MyCards !== 1) return;
           break;
       }
     }
 
-    selectEnabled.set(false);
-    me.cb({ action, cards: $selectedCards });
+    $myCards.cards = $myCards.cards.filter(e => !$selectedCards.includes(e));
+    discardEnabled.set(false);
+    me.cb({ action, remainingCards: $myCards.cards });
     myActions.set({ type: "MyActions", miniDialog: "default" });
   }
 </script>
@@ -74,7 +74,6 @@
 <div class="flexCol">
   <div class="flexRow">
     <button id="sc-ok" class="btn" action="ok" on:click={select}>OK</button>
-    <button class="btn" action="fold" on:click={select}>Fold</button>
   </div>
   <div>{me.prompt}</div>
 </div>

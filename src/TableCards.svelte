@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { registerDump } from "./support/Dumper.js";
   import {
     tableCards,
     selectedCards,
@@ -7,32 +8,17 @@
   } from "./support/Communication";
   import { getCard } from "./support/Cards";
 
-  let me;
-  let selecting = false;
-  let selected = [];
-
   onMount(() => {
-    tableCards.subscribe(value => {
-      me = value;
-    });
-    selectedCards.subscribe(value => {
-      selected = value;
-    });
-    selectEnabled.subscribe(value => {
-      selecting = value;
-    });
+    return registerDump("TableCards.svelte");
   });
 
   function select(event) {
-    if (selecting) {
-      let success;
+    if ($selectEnabled) {
       let card = event.currentTarget.getAttribute("card");
-      if (selected.includes(card)) {
+      if ($selectedCards.includes(card)) {
         selectedCards.remove("TableCards", card);
       } else {
-        if (selected.length < 5) {
-          selectedCards.add("TableCards", card);
-        }
+        selectedCards.add("TableCards", card);
       }
     }
   }
@@ -59,14 +45,13 @@
   }
 </style>
 
-<div class="flexRow">
-  <div class="flexRow" />
-  {#if me && me.cards}
-    {#each me.cards as card}
+<div id="tc-cards" class="flexRow ">
+  {#if $tableCards && $tableCards.cards}
+    {#each $tableCards.cards as card}
       <div
         on:click={select}
         {card}
-        class={selected.includes(card) ? 'card selected' : 'card'}>
+        class={$selectedCards.includes(card) ? 'card selected' : 'card'}>
         <svg
           class="svg"
           xmlns="http://www.w3.org/2000/svg"

@@ -1,13 +1,13 @@
 <script>
   import { beforeUpdate, onMount } from "svelte";
-  import { myActions, setDialog } from "../support/Communication";
+  import { registerDump } from "../support/Dumper.js";
+  import { myActions } from "../support/Communication";
   import Raise from "./Raise.svelte";
 
   export let me;
 
   let buttons = [];
   let raiseAmount = 0;
-  let paidAmount = 0;
   let pupdata = "";
   let raiseDialog = false;
 
@@ -20,45 +20,63 @@
   };
 
   onMount(() => {
-    raiseDialog = false;
-    raiseAmount = 0;
-    paidAmount = 0;
+    return registerDump(
+      "Betting.svelte",
+      me,
+      buttons,
+      raiseAmount,
+      pupdata,
+      raiseDialog
+    );
   });
 
   beforeUpdate(() => {
     pupdata = (me.allowRaise ? "1" : "2") + me.numberRound.toString();
 
     buttons = [];
-    let desc = `Raise amount is ${fAmount(me.sumRaises - me.paidAmount)}`;
 
     // We're in the first Rotation
     if (me.allowRaise) {
       if (me.sumRaises > 0) {
-        buttons.push({ action: "see", desc: "See" });
-        buttons.push({ action: "raise", desc: "Raise" });
+        if (me.chips < me.sumRaises) {
+          buttons.push({ action: "side-pot", desc: "All In" });
+        } else {
+          buttons.push({ action: "see", desc: "See" });
+          buttons.push({ action: "raise", desc: "Raise" });
+          buttons.push({ action: "allin", desc: "All In" });
+        }
         buttons.push({ action: "fold", desc: "Fold" });
       } else {
         buttons.push({ action: "check", desc: "Check" });
         buttons.push({ action: "raise", desc: "Raise" });
+        buttons.push({ action: "allin", desc: "All In" });
       }
     } else {
-      buttons.push({ action: "see", desc: "See" });
+      if (me.chips < me.sumRaises) {
+        buttons.push({ action: "side-pot", desc: "All In" });
+      } else {
+        buttons.push({ action: "see", desc: "See" });
+      }
       buttons.push({ action: "fold", desc: "Fold" });
     }
   });
 
-  function fAmount(amt) {
-    return `${(amt / 100).toFixed(2)}`;
-  }
-
   function handleAction(event) {
     let action = event.currentTarget.getAttribute("action");
 
-    if (action === "raise") {
-      raiseDialog = true;
-    } else {
-      me.cb({ action, raiseAmount });
-      myActions.set({ type: "MyActions", miniDialog: "default" });
+    switch (action) {
+      case "raise":
+        raiseDialog = true;
+        break;
+      case "allin":
+        if (confirm("Are you sure you want to go All In??")) {
+          raiseCb({ action: "raise", raiseAmount: me.chips });
+          myActions.set({ type: "MyActions", miniDialog: "default" });
+        }
+        break;
+      default:
+        me.cb({ action, raiseAmount });
+        myActions.set({ type: "MyActions", miniDialog: "default" });
     }
   }
 </script>

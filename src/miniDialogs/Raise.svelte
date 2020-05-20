@@ -1,6 +1,6 @@
 <script>
-  import { getSocket, setDialog } from "../support/Communication";
   import { onMount } from "svelte";
+  import { registerDump } from "../support/Dumper.js";
 
   export let raiseCb;
   export let me;
@@ -9,8 +9,7 @@
   let errorMessage = "";
 
   onMount(() => {
-    let raise = 0;
-    let errorMessage = "";
+    return registerDump("Raise.svelte", me, raise, errorMessage);
   });
 
   function addRaise(event) {
@@ -36,6 +35,11 @@
           break;
         }
         raiseCb({ action: "raise", raiseAmount: raise });
+        break;
+      case "rs-allin":
+        if (confirm("Are you sure you want to go All In??")) {
+          raiseCb({ action: "raise", raiseAmount: me.chips });
+        }
         break;
     }
   }
@@ -134,7 +138,7 @@
   }
 </style>
 
-<div id="dlr-div" pup="dlg-dealer" class="wrap">
+<div id="raise-div" pup="dlg-dealer" class="wrap">
   <div class="title">Raise</div>
   <div class="container">
     <div class="acontainer">
@@ -154,6 +158,7 @@
     </div>
     <div id="cccc" class="flexCol">
       <button id="rs-ok" class="btn" on:click={submit}>Raise</button>
+      <button id="rs-allin" class="btn" on:click={submit}>All In</button>
       <button id="rs-cancel" class="btn" on:click={submit}>Cancel</button>
     </div>
   </div>

@@ -1,11 +1,13 @@
 <script>
-  import { getCard } from "./support/Cards";
   import { onMount } from "svelte";
-  import { playerStatus, highLight } from "./support/Communication";
+  import { registerDump } from "./support/Dumper.js";
+  import { myStatus, playerStatus, highLight } from "./support/Communication";
 
   export let player;
+
   let thisUuid;
   let plr;
+  let myUuid = window.sessionStorage.getItem("uuid");
 
   onMount(() => {
     thisUuid = player.uuid;
@@ -16,6 +18,9 @@
         if (value.player.uuid === thisUuid) {
           plr = value.player;
         }
+        if (value.player.uuid === myUuid) {
+          $myStatus = value.player;
+        }
       }
     });
 
@@ -24,13 +29,13 @@
       let prevHighLight = plr.highLight;
       switch (value.action) {
         case "only":
-          plr.highLight = value.uuid == thisUuid ? true : false;
+          plr.highLight = value.uuid === thisUuid ? true : false;
           break;
         case "on":
-          plr.highLight = value.uuid == thisUuid ? true : plr.highLight;
+          plr.highLight = value.uuid === thisUuid ? true : plr.highLight;
           break;
         case "off":
-          plr.highLight = value.uuid == thisUuid ? false : plr.highLight;
+          plr.highLight = value.uuid === thisUuid ? false : plr.highLight;
           break;
         case "reset":
           plr.highLight = false;
@@ -38,7 +43,22 @@
       // force re-render if highLight has changed
       if (plr.highLight !== prevHighLight) plr = plr;
     });
+    return registerDump("PlayerStatus.svelte", thisUuid, plr);
   });
+
+  function breakMessage(plr) {
+    if (plr.isOnBreak && plr.isOnBreakNextRound) {
+      return "(On Break)";
+    } else {
+      if (plr.isOnBreak && !plr.isOnBreakNextRound) {
+        return "(Will Resume)";
+      } else {
+        if (plr.isOnBreakNextRound) {
+          return "(Will Break)";
+        } else return "";
+      }
+    }
+  }
 
   function fAmount(amt) {
     return `$${(amt / 100).toFixed(2)}`;
@@ -58,10 +78,12 @@
 
 {#if plr}
   <div id={plr.uuid} class="leftbox {plr.highLight ? 'highlight' : ''}">
-    <div>{plr.name}</div>
+    <div>{plr.name} {breakMessage(plr)}</div>
     <div>Status: {plr.status}</div>
     <div>Last Action: {plr.lastAction}</div>
-    <div>Chips: {fAmount(plr.chips)}</div>
+    <div>
+      Chips: {fAmount(plr.chips)} Bets: {fAmount(plr.totalBetThisRound)}
+    </div>
     <div>Buy Ins: {fAmount(plr.buyIn)}</div>
   </div>
 {:else}
