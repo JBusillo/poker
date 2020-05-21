@@ -24,6 +24,8 @@
     tablePlayers.subscribe(value => {
       if (value.type === "AddPlayer") {
         players = [...players, value.player];
+        //vpu 8e54277b-7e4c-45fa-966a-822c2f5580f0 myuuid ca3894b2-5b97-4282-bc2d-d358f278acaf
+        console.log(` vpu ${value.player.uuid} myuuid ${myUuid}`);
         if (value.player.uuid === myUuid) {
           $myStatus = value.player;
         }

@@ -47,6 +47,7 @@
       "ClientMessage",
       { msgType: "addPlayer", uuid: uuid, player: lname },
       function(data) {
+        console.log(`data   ${JSON.stringify(data)}`);
         window.sessionStorage.setItem("uuid", data.uuid);
         window.sessionStorage.setItem("name", lname);
         document

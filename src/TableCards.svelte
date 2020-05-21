@@ -1,15 +1,20 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, afterUpdate } from "svelte";
   import { registerDump } from "./support/Dumper.js";
   import {
     tableCards,
     selectedCards,
     selectEnabled
   } from "./support/Communication";
-  import { getCard } from "./support/Cards";
+
+  let image;
 
   onMount(() => {
     return registerDump("TableCards.svelte");
+  });
+
+  afterUpdate(() => {
+    draw();
   });
 
   function select(event) {
@@ -19,6 +24,32 @@
         selectedCards.remove("TableCards", card);
       } else {
         selectedCards.add("TableCards", card);
+      }
+    }
+    $tableCards.cards = $tableCards.cards;
+    draw();
+  }
+
+  function getCoordinates(card) {
+    let y = "CDHS".indexOf(card.substr(0, 1)) * 110;
+    let x = ("14020304050607080910111213".indexOf(card.substr(1, 2)) / 2) * 72;
+    return { x, y };
+  }
+
+  function draw() {
+    image = document.getElementById(`cards`);
+    if ($tableCards && $tableCards.cards) {
+      for (let card of $tableCards.cards) {
+        let can = document.getElementById(`cv${card}`);
+        let ctx = can.getContext("2d");
+        let coord = getCoordinates(card);
+        ctx.clearRect(0, 0, can.width, can.height);
+        ctx.drawImage(image, coord.x, coord.y, 72, 110, 0, 0, 72, 110);
+        if ($selectedCards.includes(card) && $selectEnabled) {
+          ctx.fillStyle = "green";
+          ctx.font = "bold 40px Helvetica, Arial, sans-serif";
+          ctx.fillText("\u2713", 32, 70);
+        }
       }
     }
   }
@@ -36,28 +67,22 @@
     height: auto;
     width: auto;
   }
-
-  .selected {
-    border-style: solid;
-    border-radius: 2px;
-    border-width: 3px;
-    border-color: green;
-  }
 </style>
 
 <div id="tc-cards" class="flexRow ">
+  <div style="display:none;">
+    <img
+      id="cards"
+      alt="a card"
+      src="./build/assets/cards.svg"
+      height="110"
+      width="72" />
+  </div>
+
   {#if $tableCards && $tableCards.cards}
     {#each $tableCards.cards as card}
-      <div
-        on:click={select}
-        {card}
-        class={$selectedCards.includes(card) ? 'card selected' : 'card'}>
-        <svg
-          class="svg"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink">
-          <image href={getCard(card)} height="110" width="72" />
-        </svg>
+      <div on:click={select} {card} class="card">
+        <canvas id={`cv${card}`} width="72" height="110" />
       </div>
     {/each}
   {/if}

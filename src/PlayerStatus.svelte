@@ -19,6 +19,7 @@
           plr = value.player;
         }
         if (value.player.uuid === myUuid) {
+          console.log(`set myStatus ${value.player.name}`);
           $myStatus = value.player;
         }
       }

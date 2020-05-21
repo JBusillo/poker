@@ -101,6 +101,7 @@ export function initCommunication() {
 	socket = io(`${config.server}`, { transport: ['websocket'] });
 	socket.on('PokerMessage', (actions, fn) => {
 		actions.forEach((action) => {
+			console.log(`action  ${JSON.stringify(action)}`);
 			switch (action.type) {
 				case 'Dialog':
 					setDialog(action, fn);
@@ -118,7 +119,6 @@ export function initCommunication() {
 					playerStatus.set(action);
 					break;
 				case 'MyActions':
-					console.log(`action   ${JSON.stringify(action)}`);
 					action.cb = fn;
 					myActions.set(action);
 					break;
