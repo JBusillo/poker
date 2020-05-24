@@ -52,7 +52,7 @@
 
   .theGrid {
     display: grid;
-    grid-template-columns: minmax(max-content, 2fr) 2fr 2fr 5fr;
+    grid-template-columns: minmax(max-content, 2fr) 3fr 3fr;
     grid-gap: 0px;
     /* justify-items: left; */
   }
@@ -104,19 +104,18 @@
         <MyCards />
         <TableCards />
       {/if}
-    </div>
-    <!-- Players  -->
-    <div class="flexCol">
+      <!-- </div>
+    <div class="flexCol"> -->
       {#each players as player}
-        <div class="theGrid">
-          <PlayerStatus {player} />
-          <div class="flexRow midbox">
-            <PlayerCards uuid={player.uuid} />
-          </div>
-          <div class="flexRow rightbox">
-            <PlayerShow uuid={player.uuid} />
-          </div>
+        <!-- <div class="theGrid"> -->
+        <PlayerStatus {player} />
+        <div class="flexRow midbox">
+          <PlayerCards uuid={player.uuid} />
         </div>
+        <div class="flexRow rightbox">
+          <PlayerShow uuid={player.uuid} />
+        </div>
+        <!-- </div> -->
       {/each}
     </div>
   </div>

@@ -9,6 +9,7 @@
   let name = window.sessionStorage.getItem("name");
   let uuid = window.sessionStorage.getItem("uuid");
   let error = "";
+  let userAgent = navigator.userAgent;
 
   onMount(() => {
     return registerDump("SignIn.svelte", name, uuid, error);
@@ -88,6 +89,10 @@
     display: flex;
     flex-direction: row;
   }
+  .flexCol {
+    display: flex;
+    flex-direction: column;
+  }
 </style>
 
 <div class="overlay" id="sg-dialog">
@@ -115,10 +120,13 @@
       <button id="sg-signin" on:click={addPlayer}>Add Player</button>
     </div>
   {/if}
-  <div class="flexRow">
-    <div class="cardRed">&#127153;</div>
-    <div class="cardBlack">&#127137;</div>
-    <div class="cardRed">&#127169;</div>
-    <div class="cardBlack">&#127185;</div>
+  <div class="flexCol">
+    <div class="flexRow">
+      <div class="cardRed">&#127153;</div>
+      <div class="cardBlack">&#127137;</div>
+      <div class="cardRed">&#127169;</div>
+      <div class="cardBlack">&#127185;</div>
+    </div>
+    <div>{userAgent}</div>
   </div>
 </div>
