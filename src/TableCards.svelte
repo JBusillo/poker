@@ -4,7 +4,8 @@
   import {
     tableCards,
     selectedCards,
-    selectEnabled
+    selectEnabled,
+    smallScreen
   } from "./support/Communication";
 
   let image;
@@ -69,21 +70,27 @@
   }
 </style>
 
-<div id="tc-cards" class="flexRow ">
-  <div style="display:none;">
-    <img
-      id="cards"
-      alt="a card"
-      src="./build/assets/cards.svg"
-      height="110"
-      width="72" />
-  </div>
+<div style="flexCol">
+  <div id="tc-cards" class="flexRow ">
+    <div style="display:none;">
+      <img
+        id="cards"
+        alt="a card"
+        src="./build/assets/cards.svg"
+        height="110"
+        width="72" />
+    </div>
 
-  {#if $tableCards && $tableCards.cards}
-    {#each $tableCards.cards as card}
-      <div on:click={select} {card} class="card">
-        <canvas id={`cv${card}`} width="72" height="110" />
-      </div>
-    {/each}
+    {#if $tableCards && $tableCards.cards}
+      {#each $tableCards.cards as card}
+        <div on:click={select} {card} class="card">
+          <canvas id={`cv${card}`} width="72" height="110" />
+        </div>
+      {/each}
+    {/if}
+  </div>
+  {#if $smallScreen}
+    <div>Table Cards</div>
   {/if}
+
 </div>

@@ -1,11 +1,26 @@
 <script>
+  import { onMount } from "svelte";
   import Table from "./Table.svelte";
   import SignIn from "./miniDialogs/SignIn.svelte";
+  import { smallScreen } from "./support/Communication.js";
 
   let signedIn = false;
 
+  onMount(() => {
+    resize();
+  });
+
+  window.addEventListener("orientationchange", function() {
+    resize();
+  });
+
   function cbSignIn() {
     signedIn = true;
+  }
+
+  function resize() {
+    let vwWidth = document.getElementById("woot").clientWidth;
+    $smallScreen = vwWidth <= 640 ? true : false;
   }
 
   //window.localStorage.setItem("debug", "engine,socket.io*");
@@ -39,11 +54,13 @@
 
 <!-- <svelte:window on:resize={CalcSize} /> -->
 <main>
-  {#if signedIn}
-    <div id="root" class="container">
-      <Table />
-    </div>
-  {:else}
-    <SignIn cb={cbSignIn} />
-  {/if}
+  <div id="woot">
+    {#if signedIn}
+      <div id="root" class="container">
+        <Table />
+      </div>
+    {:else}
+      <SignIn cb={cbSignIn} />
+    {/if}
+  </div>
 </main>

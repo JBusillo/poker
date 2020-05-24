@@ -2,6 +2,7 @@
   import { getSocket, initCommunication } from "../support/Communication";
   import { registerDump } from "../support/Dumper.js";
   import { onMount, afterUpdate } from "svelte";
+  import { v4 as uuidv4 } from "uuid";
 
   export let cb;
 
@@ -40,22 +41,23 @@
     }
 
     document.title = lname;
+    if (!uuid) uuid = uuidv4();
+    window.sessionStorage.setItem("uuid", uuid);
+    window.sessionStorage.setItem("name", lname);
 
     initCommunication();
 
     getSocket().emit(
       "ClientMessage",
       { msgType: "addPlayer", uuid: uuid, player: lname },
-      function(data) {
-        console.log(`data   ${JSON.stringify(data)}`);
-        window.sessionStorage.setItem("uuid", data.uuid);
-        window.sessionStorage.setItem("name", lname);
+      function() {
         document
           .getElementById("pupTag")
-          .setAttribute("puptag", `signin.${data.uuid}`);
+          .setAttribute("puptag", `signin.${uuid}`);
       }
     );
     cb();
+    document.documentElement.webkitRequestFullScreen();
   }
 </script>
 
@@ -70,6 +72,21 @@
   .error {
     color: red;
     font-weight: bold;
+  }
+
+  .cardRed {
+    font-size: 100px;
+    color: red;
+  }
+
+  .cardBlack {
+    font-size: 100px;
+    color: black;
+  }
+
+  .flexRow {
+    display: flex;
+    flex-direction: row;
   }
 </style>
 
@@ -98,4 +115,10 @@
       <button id="sg-signin" on:click={addPlayer}>Add Player</button>
     </div>
   {/if}
+  <div class="flexRow">
+    <div class="cardRed">&#127153;</div>
+    <div class="cardBlack">&#127137;</div>
+    <div class="cardRed">&#127169;</div>
+    <div class="cardBlack">&#127185;</div>
+  </div>
 </div>

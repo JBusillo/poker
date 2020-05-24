@@ -14,7 +14,8 @@ function getconfig() {
 		case 'development':
 			// case '__buildEnv__':
 			cfg = {
-				server: 'http://localhost:8080',
+				server: `${window.location.origin}:8080`,
+				//				server: 'http://localhost:8080',
 			};
 			break;
 

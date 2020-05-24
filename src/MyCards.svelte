@@ -5,7 +5,8 @@
     myCards,
     selectedCards,
     selectEnabled,
-    discardEnabled
+    discardEnabled,
+    smallScreen
   } from "./support/Communication";
 
   let image;
@@ -74,6 +75,11 @@
     flex-direction: row;
   }
 
+  .flexCol {
+    display: flex;
+    flex-direction: column;
+  }
+
   .card {
     max-width: 72px;
     max-height: 110px;
@@ -82,21 +88,26 @@
   }
 </style>
 
-<div id="mc-cards" class="flexRow">
-  <div style="display:none;">
-    <img
-      id="cards"
-      alt="a card"
-      src="./build/assets/cards.svg"
-      height="110"
-      width="72" />
-  </div>
+<div class="flexCol">
+  <div id="mc-cards" class="flexRow">
+    <div style="display:none;">
+      <img
+        id="cards"
+        alt="a card"
+        src="./build/assets/cards.svg"
+        height="110"
+        width="72" />
+    </div>
 
-  {#if $myCards && $myCards.cards}
-    {#each $myCards.cards as card}
-      <div on:click={select} {card} class="card">
-        <canvas id={`cv${card}`} width="72" height="110" />
-      </div>
-    {/each}
+    {#if $myCards && $myCards.cards}
+      {#each $myCards.cards as card}
+        <div on:click={select} {card} class="card">
+          <canvas id={`cv${card}`} width="72" height="110" />
+        </div>
+      {/each}
+    {/if}
+  </div>
+  {#if $smallScreen}
+    <div>My Cards</div>
   {/if}
 </div>

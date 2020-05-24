@@ -5,7 +5,8 @@
     tablePlayers,
     gamePaused,
     myStatus,
-    gameResults
+    gameResults,
+    smallScreen
   } from "./support/Communication";
 
   import TableCards from "./TableCards.svelte";
@@ -91,9 +92,18 @@
   <div class="flexCol {$gamePaused ? 'hide' : ''}">
     <!-- Player -->
     <div class="theGrid">
-      <MyActions />
-      <MyCards />
-      <TableCards />
+      {#if $smallScreen}
+        <MyActions />
+        <MyCards />
+        <div />
+        <div />
+        <TableCards />
+        <div />
+      {:else}
+        <MyActions />
+        <MyCards />
+        <TableCards />
+      {/if}
     </div>
     <!-- Players  -->
     <div class="flexCol">

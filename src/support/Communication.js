@@ -24,8 +24,8 @@ export const pupTag = writable(null);
 export const screenDialog = writable(null);
 export const selectEnabled = writable(false);
 export const discardEnabled = writable(false);
-// export const isOnBreak = writable(false);
-// export const isOnBreakNextRound = writable(false);
+
+export const smallScreen = writable(false);
 
 export const gamePaused = writable(false);
 
@@ -101,9 +101,9 @@ export function initCommunication() {
 	socket = io(`${config.server}`, { transport: ['websocket'] });
 	socket.on('PokerMessage', (actions, fn) => {
 		actions.forEach((action) => {
-			console.log(`action  ${JSON.stringify(action)}`);
 			switch (action.type) {
 				case 'Dialog':
+					console.log(`action  ${JSON.stringify(action)}`);
 					setDialog(action, fn);
 					break;
 				// ================== using Store
