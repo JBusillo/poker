@@ -25,21 +25,6 @@
 
   //window.localStorage.setItem("debug", "engine,socket.io*");
   window.localStorage.removeItem("debug");
-
-  // CalcSize -- returns L or S depending on window size  (and eventually M for Medium?)
-  // function CalcSize() {
-  //   let maxwidth = Math.max(window.innerWidth, window.innerHeight);
-  //   if (maxwidth >= 1000) {
-  //     // Large desktop size
-  //     size = "L";
-  //   } else if (maxwidth >= 500) {
-  //     // Tablet size
-  //     size = "S";
-  //   } else {
-  //     // Smartphone size
-  //     size = "S";
-  //   }
-  // }
 </script>
 
 <style>
@@ -50,11 +35,31 @@
     height: auto;
     width: auto;
   }
+
+  .cardRed {
+    font-family: "cards";
+    font-size: 100px;
+    color: red;
+  }
+
+  .cardBlack {
+    font-family: "cards";
+    font-size: 100px;
+    color: black;
+  }
 </style>
 
-<!-- <svelte:window on:resize={CalcSize} /> -->
+<svelte:head>
+  <link rel="stylesheet" href="/build/assets/custom.css" />
+</svelte:head>
+
 <main>
   <div id="woot">
+    <!-- <div class="cardRed">&#127153;</div>
+    <div class="cardBlack">&#127137;</div>
+    <div class="cardRed">&#127169;</div>
+    <div class="cardBlack">&#127185;</div>
+    <div class="cardBlack">&#127237;</div> -->
     {#if signedIn}
       <div id="root" class="container">
         <Table />

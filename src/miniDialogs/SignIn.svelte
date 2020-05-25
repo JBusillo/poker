@@ -58,7 +58,7 @@
       }
     );
     cb();
-    document.documentElement.webkitRequestFullScreen();
+    document.documentElement.requestFullScreen();
   }
 </script>
 

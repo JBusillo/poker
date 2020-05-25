@@ -1,0 +1,7 @@
+{
+	"presets": [
+		// Use the preset-env babel plugins
+		"@babel/preset-env"
+	],
+	"plugins": ["@babel/plugin-proposal-object-rest-spread"]
+}

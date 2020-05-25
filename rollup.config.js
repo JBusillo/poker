@@ -1,33 +1,34 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import livereload from 'rollup-plugin-livereload';
+import replace from '@rollup/plugin-replace';
+import visualizer from 'rollup-plugin-visualizer';
+
+import babel from '@rollup/plugin-babel';
 
 import json from '@rollup/plugin-json';
 import builtins from 'rollup-plugin-node-builtins';
 
-import livereload from 'rollup-plugin-livereload';
+import del from 'rollup-plugin-delete';
+
 import copyassets from 'rollup-plugin-copy-assets';
-import replace from '@rollup/plugin-replace';
 
 import { terser } from 'rollup-plugin-terser';
-// import alias from '@rollup/plugin-alias';
 
 const production = !process.env.ROLLUP_WATCH;
-
-// const aliases = alias({
-// 	resolve: ['.svelte', '.js'], //optional, by default this will just look for .js files or folders
-// 	entries: [{ find: 'src', replacement: 'D:/Projects/poker-svelte/src' }],
-// });
 
 export default {
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
+		//		sourcemap: !production,
 		format: 'iife',
 		name: 'app',
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
+		del({ targets: 'public/build/*' }),
 		replace({ __buildEnv__: production ? 'production' : 'development' }),
 		copyassets({
 			assets: ['src/assets'],
@@ -38,7 +39,7 @@ export default {
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
 			css: (css) => {
-				css.write('public/build/bundle.css');
+				css.write('public/build/bundle.css', false);
 			},
 		}),
 
@@ -53,6 +54,7 @@ export default {
 			preferBuiltins: true,
 		}),
 		commonjs(),
+		babel({ babelHelpers: 'bundled' }),
 		builtins(),
 		json({
 			compact: true,
@@ -69,6 +71,7 @@ export default {
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser(),
+		visualizer({ sourcemap: true }),
 	],
 	watch: {
 		clearScreen: false,
